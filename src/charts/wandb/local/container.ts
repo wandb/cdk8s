@@ -12,13 +12,12 @@ type OidcConfig = {
 
 export class WeightsAndBiasesLocal extends Container {
   constructor({ image }: WeightsAndBiasesLocalProps) {
-    const httpEndpointPort = 8080
-    const liveness = Probe.fromHttpGet('/healthz', { port: httpEndpointPort })
-    const startup = Probe.fromHttpGet('/ready', {
-      port: httpEndpointPort,
-      failureThreshold: 120,
-    })
-    const readiness = Probe.fromHttpGet('/ready', { port: httpEndpointPort })
+    // Probes
+    const port = 8080
+    const liveness = Probe.fromHttpGet('/healthz', { port })
+    const startup = Probe.fromHttpGet('/ready', { port, failureThreshold: 120 })
+    const readiness = Probe.fromHttpGet('/ready', { port })
+
     super({ image, liveness, readiness, startup })
   }
 

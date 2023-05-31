@@ -1,0 +1,67 @@
+{
+  "$ref": "#/definitions/wandb-config-cdk",
+  "definitions": {
+    "wandb-config-cdk": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "database": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "managed": {
+                  "type": "boolean",
+                  "default": true
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "host": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "object",
+                  "properties": {
+                    "secret": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "secret",
+                    "key"
+                  ],
+                  "additionalProperties": false
+                },
+                "user": {
+                  "type": "string"
+                },
+                "database": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "host",
+                "password",
+                "user",
+                "database"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "description": "Configuration schema for generating k8s manifests"
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
