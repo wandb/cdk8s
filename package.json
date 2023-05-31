@@ -1,0 +1,36 @@
+{
+  "name": "cdk8s",
+  "version": "1.0.0",
+  "main": "./src/index.js",
+  "types": "./src/index.ts",
+  "private": true,
+  "scripts": {
+    "import": "cdk8s import",
+    "generate": "cdk8s synth",
+    "synth": "cdk8s synth",
+    "compile": "tsc --build",
+    "watch": "tsc --build -w",
+    "test": "jest",
+    "build": "npm run compile && npm run test && npm run synth",
+    "upgrade": "npm i cdk8s@latest cdk8s-cli@latest",
+    "upgrade:next": "npm i cdk8s@next cdk8s-cli@next"
+  },
+  "dependencies": {
+    "@colors/colors": "^1.5.0",
+    "cdk8s": "^2.7.76",
+    "cdk8s-plus-26": "^2.4.6",
+    "constructs": "^10.2.37",
+    "winston": "^3.9.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "@types/node": "^20.2.5",
+    "cdk8s-cli": "^2.2.46",
+    "eslint": "^8.41.0",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.8",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}
