@@ -1,21 +1,14 @@
 import { z } from 'zod'
 import { zodToJsonSchema } from 'zod-to-json-schema'
 import * as fs from 'fs'
+import { mysqlAuthConfig } from './mysql/config'
 
 /**
  * Defining schema for defining the database
  */
-export const database = z.object({ managed: z.boolean().default(true) }).or(
-  z.object({
-    host: z.string(),
-    password: z.object({
-      secret: z.string(),
-      key: z.string(),
-    }),
-    user: z.string(),
-    database: z.string(),
-  }),
-)
+export const database = z
+  .object({ managed: z.boolean().default(true) })
+  .or(mysqlAuthConfig)
 
 export const schema = z
   .object({

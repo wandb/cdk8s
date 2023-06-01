@@ -1,39 +1,28 @@
 import './schema'
 
 import { Construct } from 'constructs'
-import { App, Chart, ChartProps, Size } from 'cdk8s'
-import { logger } from './logger'
+import { App, Chart, ChartProps, Helm, Size } from 'cdk8s'
 import {
   Deployment,
   PersistentVolumeAccessMode,
   PersistentVolumeClaim,
   Probe,
-  Protocol,
   Volume,
 } from 'cdk8s-plus-26'
-
-const log = logger.child({ label: 'wandb/local' })
+import { createLocalContainer } from './wandb/local/container'
 
 const WANDB_IMAGE = 'wandb/local'
 
 export class Server extends Chart {
   deployment: Deployment
 
-  constructor(scope: Construct, id: string, props: ChartProps = {}) {
+  constructor(scope: Construct, id: string, props: ChartProps) {
     super(scope, id, { disableResourceNameHashes: true, ...props })
 
     log.info('Creating wandb/local deployment')
 
     this.deployment = new Deployment(this, 'local')
-
-    // Add wandb image
-    const port = 8080
-    const liveness = Probe.fromHttpGet('/healthz', { port })
-    const startup = Probe.fromHttpGet('/ready', { port, failureThreshold: 120 })
-    const readiness = Probe.fromHttpGet('/ready', { port })
-    this.deployment
-      .addContainer({ image: WANDB_IMAGE, liveness, readiness, startup })
-      .addPort({ name: 'http', number: port, protocol: Protocol.TCP })
+    this.deployment.addContainer(createLocalContainer(scope, props))
   }
 
   /**
@@ -62,8 +51,25 @@ export class Server extends Chart {
 log.info('Initalizing app')
 const app = new App({ recordConstructMetadata: true })
 
-const t = new Server(app, 'wandb')
+const t = new Server(app, 'wandb', {
+  user: 'wandb',
+  host: 'localhost',
+  password: { key: 'testing', secret: 'mysql-secrets' },
+  database: 'wandb_local',
+})
 t.mountLegacyStorage()
 
 log.info('Generating YAML')
 app.synth()
+
+new Deployment(null, 'my-deployment', {
+  containers: [{ image: 'wandb/local', liveness: Probe.fromHttpGet('/ready') }],
+  
+})
+
+new Helm(null, 'my-heal', {
+  chart: 'bitami/redis'
+  values: {
+    
+  }
+})
