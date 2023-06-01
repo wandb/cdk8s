@@ -1,11 +1,37 @@
 #!/bin/bash
 
-function semverParse() {
-    major="${1%%.*}"
-    minor="${1#$major.}"
-    minor="${minor%%.*}"
-    patch="${1#$major.$minor.}"
-    patch="${patch%%[-.]*}"
+#
+#
+# Example:
+#
+# local -a parsed
+# parse_semver "1.2.3" parsed
+# echo "Major: ${parsed[0]}"
+# echo "Minor: ${parsed[1]}"
+# echo "Patch: ${parsed[2]}"
+#
+
+# Parses a given SemVer string into major,minor, and patch version numbers and
+# stores them in an indexed array with the specified prefix.
+# 
+# Input:
+# semver - A SemVer-formatted version string (e.g., "1.2.3")
+# prefix - A prefix for the indexed array variables to avoid naming conflicts
+#         (e.g., "v1_parts") Output: The function updates three indexed array
+#         variables with
+
+# the given prefix, containing major, minor, and patch versions.
+
+function parse_semver() {
+  local semver="$1"
+  local prefix="$2"
+
+  local -a parsed_ver
+  IFS='.' read -ra parsed_ver <<< "$semver"
+
+  eval "${prefix}[0]=${parsed_ver[0]}"
+  eval "${prefix}[1]=${parsed_ver[1]}"
+  eval "${prefix}[2]=${parsed_ver[2]}"
 }
 
 SEMVER_COMPARE_RESULT=

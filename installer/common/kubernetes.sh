@@ -33,14 +33,4 @@ function kubernetes_has_packages() {
         printf "crictl command missing - will install host components\n"
         return 1
     fi
-
-    # Check we have the proper versions installed
-    local currentCrictlVersion=$(crictl --version | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')
-    semverCompare "$currentCrictlVersion" "$CRICTL_VERSION"
-    if [ "$SEMVER_COMPARE_RESULT" = "-1" ]; then
-        printf "crictl command upgrade available - will install host components\n"
-        return 1
-    fi
-
-    kubelet --version | grep -q "$k8sVersion"
 }
