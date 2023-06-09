@@ -14,6 +14,7 @@ export const mysqlConfig = z
     password: z.object({
       secret: z.string(),
       key: z.string(),
+      checksum: z.string().optional(),
     }),
   })
   .and(mysqlBaseConfig)
@@ -22,6 +23,7 @@ export type MysqlConfig = z.infer<typeof mysqlConfig>
 
 export const mysqlConfigToEnv = (
   scope: Construct,
+  id: string,
   config: MysqlConfig,
 ): Record<string, EnvValue> => {
   return {
@@ -32,11 +34,13 @@ export const mysqlConfigToEnv = (
     DATABASE_PASSWORD: EnvValue.fromSecretValue({
       secret: Secret.fromSecretName(
         scope,
-        'mysql-password',
+        `${scope.node.id}-${id}-mysql-password`,
         config.password.secret,
       ),
       key: config.password.key,
     }),
-    MYSQL: EnvValue.fromValue('mysql://'),
+    MYSQL: EnvValue.fromValue(
+      'mysql://$(DATABASE_USER):$(DATABASE_PASSWORD)@$(DATABASE_HOST):$(DATABASE_PORT)/$(DATABASE)',
+    ),
   }
 }

@@ -9,6 +9,7 @@
   "scripts": {
     "import": "cdk8s import",
     "gen": "ts-node main.ts",
+    "gen:schema": "ts-node src/schema.ts",
     "synth": "cdk8s synth",
     "compile": "tsc --build",
     "watch": "tsc --build -w",

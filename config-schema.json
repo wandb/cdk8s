@@ -7,6 +7,31 @@
         "$schema": {
           "type": "string"
         },
+        "webServices": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "object",
+              "properties": {
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string",
+                  "default": "latest"
+                }
+              },
+              "required": [
+                "repository"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "image"
+          ],
+          "additionalProperties": false
+        },
         "mysql": {
           "allOf": [
             {
@@ -19,6 +44,9 @@
                       "type": "string"
                     },
                     "key": {
+                      "type": "string"
+                    },
+                    "checksum": {
                       "type": "string"
                     }
                   },
@@ -57,10 +85,66 @@
               ]
             }
           ]
+        },
+        "bucket": {
+          "type": "object",
+          "properties": {
+            "connectionString": {
+              "type": "string"
+            },
+            "region": {
+              "type": "string",
+              "default": ""
+            },
+            "kmsKey": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          "required": [
+            "connectionString"
+          ],
+          "additionalProperties": false
+        },
+        "sso": {
+          "type": "object",
+          "properties": {
+            "oidc": {
+              "type": "object",
+              "properties": {
+                "clientId": {
+                  "type": "string"
+                },
+                "issuer": {
+                  "type": "string"
+                },
+                "method": {
+                  "type": "string",
+                  "enum": [
+                    "implicit",
+                    "pkce"
+                  ],
+                  "default": "implicit"
+                }
+              },
+              "required": [
+                "clientId",
+                "issuer"
+              ],
+              "additionalProperties": false
+            },
+            "ldap": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
-        "mysql"
+        "mysql",
+        "bucket"
       ],
       "additionalProperties": false,
       "description": "Configuration schema for generating k8s manifests"
