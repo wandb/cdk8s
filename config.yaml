@@ -1,1 +1,9 @@
 # yaml-language-server: $schema=./config-schema.json
+mysql:
+  database: 'wandb_local'
+  port: 3306
+  user: wandb
+  host: localhost
+  password:
+    secret: mysql
+    key: password

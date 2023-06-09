@@ -7,24 +7,11 @@
         "$schema": {
           "type": "string"
         },
-        "database": {
-          "anyOf": [
+        "mysql": {
+          "allOf": [
             {
               "type": "object",
               "properties": {
-                "managed": {
-                  "type": "boolean",
-                  "default": true
-                }
-              },
-              "additionalProperties": false
-            },
-            {
-              "type": "object",
-              "properties": {
-                "host": {
-                  "type": "string"
-                },
                 "password": {
                   "type": "object",
                   "properties": {
@@ -40,6 +27,20 @@
                     "key"
                   ],
                   "additionalProperties": false
+                }
+              },
+              "required": [
+                "password"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "host": {
+                  "type": "string"
+                },
+                "port": {
+                  "type": "number"
                 },
                 "user": {
                   "type": "string"
@@ -50,15 +51,17 @@
               },
               "required": [
                 "host",
-                "password",
+                "port",
                 "user",
                 "database"
-              ],
-              "additionalProperties": false
+              ]
             }
           ]
         }
       },
+      "required": [
+        "mysql"
+      ],
       "additionalProperties": false,
       "description": "Configuration schema for generating k8s manifests"
     }

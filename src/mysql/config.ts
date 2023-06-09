@@ -2,32 +2,41 @@ import { EnvValue, Secret } from 'cdk8s-plus-26'
 import { Construct } from 'constructs'
 import { z } from 'zod'
 
-export const mysqlAuthConfig = z.object({
+const mysqlBaseConfig = z.object({
   host: z.string(),
-  port: z.number().default(3306),
-  password: z.object({
-    secret: z.string(),
-    key: z.string(),
-  }),
+  port: z.number(),
   user: z.string(),
   database: z.string(),
 })
 
-export type MysqlAuthConfig = z.infer<typeof mysqlAuthConfig>
-
-export const configToEnv = (scope: Construct, config: MysqlAuthConfig) => {
-  const { database, user, password, host, port = 3306 } = config
-  return {
-    DATABASE: EnvValue.fromValue(database),
-    DATABASE_HOST: EnvValue.fromValue(host),
-    DATABASE_USER: EnvValue.fromValue(user),
-    DATABASE_PORT: EnvValue.fromValue(port.toString()),
-    DATABASE_PASSWORD: EnvValue.fromSecretValue({
-      secret: Secret.fromSecretName(scope, 'database-secret', password.secret),
-      key: password.key,
+export const mysqlConfig = z
+  .object({
+    password: z.object({
+      secret: z.string(),
+      key: z.string(),
     }),
-    MYSQL: EnvValue.fromValue(
-      'mysql://$(DATABASE_USER):$(DATABASE_PASSWORD)@$(DATABASE_HOST):$(DATABASE_PORT)/$(DATABASE)',
-    ),
-  } as const
+  })
+  .and(mysqlBaseConfig)
+
+export type MysqlConfig = z.infer<typeof mysqlConfig>
+
+export const mysqlConfigToEnv = (
+  scope: Construct,
+  config: MysqlConfig,
+): Record<string, EnvValue> => {
+  return {
+    DATABASE: EnvValue.fromValue(config.database),
+    DATABASE_HOST: EnvValue.fromValue(config.host),
+    DATABASE_PORT: EnvValue.fromValue(config.port.toString()),
+    DATABASE_USER: EnvValue.fromValue(config.user),
+    DATABASE_PASSWORD: EnvValue.fromSecretValue({
+      secret: Secret.fromSecretName(
+        scope,
+        'mysql-password',
+        config.password.secret,
+      ),
+      key: config.password.key,
+    }),
+    MYSQL: EnvValue.fromValue('mysql://'),
+  }
 }

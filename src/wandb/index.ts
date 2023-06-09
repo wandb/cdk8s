@@ -1,13 +1,13 @@
 import { Chart, ChartProps } from 'cdk8s'
 import { Construct } from 'constructs'
-import { logger } from '../logger'
+import { WebServiceChart } from './webservice'
 
-const log = logger.child({ label: 'wandb' })
+export class WeightsAndBaisesChart extends Chart {
+  webService: Chart
 
-export class WeightsAndBiases extends Chart {
-  constructor(scope: Construct, id: string, props: ChartProps) {
-    super(scope, id, { disableResourceNameHashes: true, ...props })
+  constructor(scope: Construct, id: string, props?: ChartProps) {
+    super(scope, id, props)
 
-    log.info('Creating Weights & Biases deployment')
+    this.webService = new WebServiceChart(this, `webservice`)
   }
 }
