@@ -7,6 +7,69 @@
         "$schema": {
           "type": "string"
         },
+        "common": {
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "ownerReference": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "apiVersion": {
+                        "type": "string"
+                      },
+                      "blockOwnerDeletion": {
+                        "type": "boolean"
+                      },
+                      "controller": {
+                        "type": "boolean"
+                      },
+                      "kind": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "uid": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "apiVersion",
+                      "controller",
+                      "kind",
+                      "name",
+                      "uid"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "default": []
+                },
+                "annotations": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "default": {}
+                },
+                "labels": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "default": {}
+                }
+              },
+              "additionalProperties": false,
+              "default": {}
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
         "webServices": {
           "type": "object",
           "properties": {
@@ -17,12 +80,12 @@
                   "type": "string"
                 },
                 "tag": {
-                  "type": "string",
-                  "default": "latest"
+                  "type": "string"
                 }
               },
               "required": [
-                "repository"
+                "repository",
+                "tag"
               ],
               "additionalProperties": false
             }
@@ -33,10 +96,22 @@
           "additionalProperties": false
         },
         "mysql": {
-          "allOf": [
+          "anyOf": [
             {
               "type": "object",
               "properties": {
+                "host": {
+                  "type": "string"
+                },
+                "port": {
+                  "type": "number"
+                },
+                "user": {
+                  "type": "string"
+                },
+                "database": {
+                  "type": "string"
+                },
                 "password": {
                   "type": "object",
                   "properties": {
@@ -58,31 +133,60 @@
                 }
               },
               "required": [
+                "host",
+                "port",
+                "user",
+                "database",
                 "password"
-              ]
+              ],
+              "additionalProperties": false
             },
             {
               "type": "object",
               "properties": {
-                "host": {
-                  "type": "string"
+                "managed": {
+                  "type": "boolean",
+                  "const": true
                 },
-                "port": {
-                  "type": "number"
+                "image": {
+                  "type": "object",
+                  "properties": {
+                    "repository": {
+                      "type": "string",
+                      "default": "wandb/local"
+                    },
+                    "tag": {
+                      "type": "string",
+                      "default": "latest"
+                    }
+                  },
+                  "additionalProperties": false
                 },
-                "user": {
-                  "type": "string"
-                },
-                "database": {
-                  "type": "string"
+                "password": {
+                  "type": "object",
+                  "properties": {
+                    "secret": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    },
+                    "checksum": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "secret",
+                    "key"
+                  ],
+                  "additionalProperties": false
                 }
               },
               "required": [
-                "host",
-                "port",
-                "user",
-                "database"
-              ]
+                "managed",
+                "password"
+              ],
+              "additionalProperties": false
             }
           ]
         },

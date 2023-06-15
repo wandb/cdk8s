@@ -1,10 +1,10 @@
-import { Chart } from 'cdk8s'
+import { Chart, ChartProps } from 'cdk8s'
 import { Construct } from 'constructs'
 
-export class WeaveChart extends Chart {
-  constructor(scope: Construct, id: string) {
-    super(scope, id)
+type WeaveChartProps = ChartProps & {}
 
-    // TODO: Add weave chart
+export class WeaveChart extends Chart {
+  constructor(scope: Construct, id: string, props: WeaveChartProps) {
+    super(scope, id, props)
   }
 }

@@ -11,3 +11,9 @@ mysql:
 bucket:
   connectionString: s3://my-bucket
   region: us-east-1
+
+sso:
+  oidc:
+    clientId: wandb
+    issuer: https://wandb.auth0.com
+    method: implicit

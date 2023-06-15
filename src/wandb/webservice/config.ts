@@ -11,8 +11,8 @@ export type OidcConfig = z.infer<typeof oidcConfig>
 
 export const bucketConfig = z.object({
   connectionString: z.string(),
-  region: z.string().default(''),
-  kmsKey: z.string().default(''),
+  region: z.string().default('').optional(),
+  kmsKey: z.string().default('').optional(),
 })
 
 export type BucketConfig = z.infer<typeof bucketConfig>
@@ -22,8 +22,8 @@ export const bucketConfigToEnv = (
 ): Record<string, EnvValue> => {
   return {
     BUCKET: EnvValue.fromValue(config.connectionString),
-    AWS_REGION: EnvValue.fromValue(config.region),
-    AWS_S3_KMS_ID: EnvValue.fromValue(config.kmsKey),
+    AWS_REGION: EnvValue.fromValue(config.region ?? ''),
+    AWS_S3_KMS_ID: EnvValue.fromValue(config.kmsKey ?? ''),
   }
 }
 
