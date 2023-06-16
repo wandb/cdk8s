@@ -13,7 +13,7 @@ import { RedisChart } from './src/redis'
 
 const app = new App()
 
-const metadata = config.common?.metadata ?? {}
+const metadata = config.global?.metadata ?? {}
 
 const getBucketCredentials = () => {
   if (config.bucket != null) {
@@ -30,6 +30,7 @@ const getBucketCredentials = () => {
   const mino = new MinioChart(app, 'minio', {
     disableResourceNameHashes: true,
     metadata,
+    storageClassName: config.minio?.storageClassName,
     ...config.minio,
   })
   return mino.getBucket()
@@ -43,8 +44,9 @@ const getMysqlCredentials = (): MysqlCredentialsConfig => {
   logger.info('Creating basic MySQL deployment')
   const mysqlChart = new MysqlStatefulSetChart(app, 'mysql', {
     disableResourceNameHashes: true,
-    ...config.mysql,
     metadata,
+    storageClassName: config.minio?.storageClassName,
+    ...config.mysql,
   })
 
   return mysqlChart.getCredentials()
@@ -71,8 +73,8 @@ const redis = getRedisCredentials()
 
 new WeightsAndBaisesChart(app, 'wandb', {
   disableResourceNameHashes: true,
-  metadata,
-  webservices: { ...config, mysql, bucket, redis },
+  global: { metadata },
+  webServices: { ...config, ...config.webServices, mysql, bucket, redis },
 })
 
 app.synth()

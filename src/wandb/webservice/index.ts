@@ -14,7 +14,7 @@ import {
   ssoConfigToEnv,
 } from './config'
 import { MysqlCredentialsConfig } from '../../mysql'
-import { WbChart } from '../../common/chart'
+import { WbChart } from '../../global/chart'
 import { RedisCredentialsConfig } from '../../redis/config'
 import { canConnectToDatabase, mysqlConfigToEnv } from '../../mysql/helpers'
 import { canConnectToRedis, redisConfigToEnv } from '../../redis/helpers'

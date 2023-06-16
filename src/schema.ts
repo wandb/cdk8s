@@ -3,15 +3,9 @@ import { zodToJsonSchema } from 'zod-to-json-schema'
 import * as fs from 'fs'
 import { mysqlConfig } from './mysql/config'
 import { bucketConfig, ssoConfig } from './wandb/webservice/config'
-import { ownerReferenceConfig } from './common/owner-reference'
 import { minioConfig } from './minio/config'
 import { redisConfig } from './redis/config'
-
-const metadataConfig = z.object({
-  ownerReference: z.array(ownerReferenceConfig).default([]),
-  annotations: z.record(z.string()).default({}),
-  labels: z.record(z.string()).default({}),
-})
+import { generalConfig } from './global/global'
 
 export const schema = z
   .object({
@@ -19,12 +13,7 @@ export const schema = z
 
     namespace: z.string().default('default').optional(),
 
-    common: z
-      .object({
-        metadata: metadataConfig.default({}),
-      })
-      .default({})
-      .optional(),
+    global: generalConfig.optional(),
 
     webServices: z
       .object({

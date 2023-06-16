@@ -1,5 +1,5 @@
 import { ApiObjectMetadata, ChartProps } from 'cdk8s'
-import { WbChart } from '../common/chart'
+import { WbChart } from '../global/chart'
 import { Construct } from 'constructs'
 import { Deployment, Probe, Service, ServiceType } from 'cdk8s-plus-26'
 import { REDIS_DEFAULT_REPOSITORY, REDIS_DEFAULT_TAG } from './helpers'
@@ -29,7 +29,6 @@ export class RedisChart extends WbChart {
           readiness: ping,
           securityContext: {
             ensureNonRoot: false,
-            allowPrivilegeEscalation: true,
             readOnlyRootFilesystem: false,
           },
           ports: [{ number: 6379 }],

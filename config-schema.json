@@ -11,68 +11,75 @@
           "type": "string",
           "default": "default"
         },
-        "common": {
+        "global": {
           "type": "object",
           "properties": {
             "metadata": {
               "type": "object",
               "properties": {
-                "ownerReference": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "apiVersion": {
-                        "type": "string"
+                "metadata": {
+                  "type": "object",
+                  "properties": {
+                    "ownerReference": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "apiVersion": {
+                            "type": "string"
+                          },
+                          "blockOwnerDeletion": {
+                            "type": "boolean"
+                          },
+                          "controller": {
+                            "type": "boolean"
+                          },
+                          "kind": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "uid": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "apiVersion",
+                          "controller",
+                          "kind",
+                          "name",
+                          "uid"
+                        ],
+                        "additionalProperties": false
                       },
-                      "blockOwnerDeletion": {
-                        "type": "boolean"
-                      },
-                      "controller": {
-                        "type": "boolean"
-                      },
-                      "kind": {
-                        "type": "string"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "uid": {
-                        "type": "string"
-                      }
+                      "default": []
                     },
-                    "required": [
-                      "apiVersion",
-                      "controller",
-                      "kind",
-                      "name",
-                      "uid"
-                    ],
-                    "additionalProperties": false
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "default": {}
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "default": {}
+                    }
                   },
-                  "default": []
+                  "additionalProperties": false
                 },
-                "annotations": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "default": {}
-                },
-                "labels": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "default": {}
+                "storageClassName": {
+                  "type": "string"
                 }
               },
-              "additionalProperties": false,
-              "default": {}
+              "additionalProperties": false
             }
           },
-          "additionalProperties": false,
-          "default": {}
+          "additionalProperties": false
         },
         "webServices": {
           "type": "object",
@@ -276,15 +283,16 @@
                   "type": "object",
                   "properties": {
                     "repository": {
-                      "type": "string",
-                      "default": "wandb/local"
+                      "type": "string"
                     },
                     "tag": {
-                      "type": "string",
-                      "default": "latest"
+                      "type": "string"
                     }
                   },
                   "additionalProperties": false
+                },
+                "storageClassName": {
+                  "type": "string"
                 },
                 "password": {
                   "anyOf": [

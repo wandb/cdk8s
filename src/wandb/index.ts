@@ -1,13 +1,14 @@
-import { ApiObjectMetadata, Chart, ChartProps } from 'cdk8s'
+import { Chart, ChartProps } from 'cdk8s'
 import { Construct } from 'constructs'
 import { WebServiceChart, WebServiceChartProps } from './webservice'
 import { WeaveChart } from './weave'
 import { merge } from 'lodash'
-import { WbChart } from '../common/chart'
+import { WbChart } from '../global/chart'
+import { GeneralConfig } from '../global/global'
 
 type WeightsAndBaisesChartConfig = ChartProps & {
-  metadata: ApiObjectMetadata
-  webservices: WebServiceChartProps
+  global: GeneralConfig
+  webServices: WebServiceChartProps
 }
 
 export class WeightsAndBaisesChart extends WbChart {
@@ -21,11 +22,11 @@ export class WeightsAndBaisesChart extends WbChart {
   ) {
     super(scope, id, { disableResourceNameHashes: true, ...props })
 
-    const { metadata, webservices } = props
+    const { global, webServices } = props
     this.webService = new WebServiceChart(this, `webservice`, {
       ...props,
-      ...webservices,
-      metadata: merge(metadata, webservices.metadata),
+      ...webServices,
+      metadata: merge(global.metadata, webServices.metadata),
     })
     this.weave = new WeaveChart(this, `weave`, props)
   }

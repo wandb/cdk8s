@@ -1,6 +1,6 @@
 import { ChartProps } from 'cdk8s'
 import { Construct } from 'constructs'
-import { WbChart } from '../../common/chart'
+import { WbChart } from '../../global/chart'
 
 type WeaveChartProps = ChartProps & {}
 

@@ -23,7 +23,7 @@ export const canConnectToRedis = (
     command: [
       '/bin/sh',
       '-c',
-      'until redis-cli -h $REDIS_HOST -p $REDIS_PASSWORD ping; do echo "Waiting for Redis connection..."; sleep 5; done',
+      'until redis-cli -h $REDIS_HOST -p $REDIS_PORT ping; do echo "Waiting for Redis connection..."; sleep 5; done',
     ],
   }
 }

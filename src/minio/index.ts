@@ -12,9 +12,9 @@ import {
 } from 'cdk8s-plus-26'
 import { Construct } from 'constructs'
 import { BucketConfig } from '../wandb/webservice/config'
-import { WbChart } from '../common/chart'
+import { WbChart } from '../global/chart'
 import { MinioConfig } from './config'
-import { RecreateJob } from '../common/job'
+import { RecreateJob } from '../global/job'
 
 const MINIO_REGION_NAME = 'us-east-1'
 const MINIO_BUCKET_NAME = 'wandb'

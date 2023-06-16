@@ -12,12 +12,12 @@ import {
 } from 'cdk8s-plus-26'
 import { Construct } from 'constructs'
 import { mysqlConfigToEnv } from './helpers'
-import { MysqlConfig, MysqlCredentialsConfig } from './config'
-import { WbChart } from '../common/chart'
+import { MysqlCredentialsConfig, MysqlManagedConfig } from './config'
+import { WbChart } from '../global/chart'
 
 type MysqlStatefulSetChartProps = ChartProps & {
   metadata?: ApiObjectMetadata
-} & MysqlConfig
+} & MysqlManagedConfig
 
 const mysqlPingCheck = Probe.fromCommand([
   'sh',
@@ -34,7 +34,7 @@ export class MysqlStatefulSetChart extends WbChart {
     private props: MysqlStatefulSetChartProps,
   ) {
     super(scope, id, props)
-    const { metadata } = props
+    const { metadata, image } = props
 
     new ConfigMap(this, 'initdb', {
       metadata,
@@ -56,16 +56,18 @@ sort_buffer_size = 33554432`,
       storage: Size.gibibytes(10),
     })
 
+    const repository = image?.repository ?? 'mysql'
+    const tag = image?.tag ?? '8.0'
     const ss = new StatefulSet(this, 'mysql', {
       replicas: 1,
-      service: new Service(this, 'mysql-service', {
+      service: new Service(this, 'service', {
         type: ServiceType.CLUSTER_IP,
         ports: [{ port: 3306, protocol: Protocol.TCP }],
       }),
       metadata,
       containers: [
         {
-          image: 'mysql:8.0.33',
+          image: `${repository}:${tag}`,
           liveness: mysqlPingCheck,
           readiness: mysqlPingCheck,
           portNumber: 3306,
@@ -95,15 +97,13 @@ sort_buffer_size = 33554432`,
   }
 
   getCredentials(): MysqlCredentialsConfig {
-    return 'database' in this.props
-      ? this.props
-      : {
-          host: this.service?.name ?? 'mysql-service',
-          database: 'wandb_local',
-          port: 3306,
-          user: 'wandb',
-          password: 'wandb',
-          ...this.props,
-        }
+    return {
+      host: this.service?.name ?? 'mysql-service',
+      database: 'wandb_local',
+      port: 3306,
+      user: 'wandb',
+      password: 'wandb',
+      ...this.props,
+    }
   }
 }

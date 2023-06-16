@@ -19,10 +19,13 @@ export type MysqlCredentialsConfig = z.infer<typeof mysqlCredentialConfig>
 export const managedMysqlConfig = z.object({
   image: z
     .object({
-      repository: z.string().default('wandb/local'),
-      tag: z.string().default('latest'),
+      repository: z.string().optional(),
+      tag: z.string().optional(),
     })
     .optional(),
+
+  storageClassName: z.string().optional(),
+
   password: z
     .object({
       secret: z.string(),
