@@ -2,7 +2,8 @@
 
 - [cdk8s](#cdk8s)
   - [Why typescript?](#why-typescript)
-  - [Commands](#commands)
+  - [Install](#install)
+  - [cdk8s](#cdk8s-1)
 
 ## Why typescript?
 
@@ -10,24 +11,16 @@
   developed in TypeScript. As a result, the documentation and community examples
   are more extensive in TypeScript.
 
-## Commands
+## Install
 
-Compile:
+To apply you will kind installed.
 
-- `npm run compile` Compile typescript code to javascript (or "yarn watch")
-- `npm run watch` Watch for changes and compile typescript in the background
-- `npm run build` Compile + synth
+1. `pnpm i`
+2. `pnpm gen`
+3. `bash ./apply.sh`
 
-Synthesize:
+## cdk8s
 
-- `npm run synth` Synthesize k8s manifests from charts to dist/ (ready for 'kubectl apply -f')
-
-Deploy:
-
-- `kubectl apply -f dist/`
-
-Upgrades:
-
-- `npm run import` Import/update k8s apis (you should check-in this directory)
-- `npm run upgrade` Upgrade cdk8s modules to latest version
-- `npm run upgrade:next` Upgrade cdk8s modules to latest "@next" version (last commit)
+- `pnpm run import` Import/update k8s apis (you should check-in this directory)
+- `pnpm run upgrade` Upgrade cdk8s modules to latest version
+- `pnpm run upgrade:next` Upgrade cdk8s modules to latest "@next" version (last commit)

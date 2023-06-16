@@ -37,7 +37,7 @@ export class RedisChart extends WbChart {
       ],
     })
 
-    this.service = new Service(this, 'redis-service', {
+    this.service = new Service(this, 'service', {
       metadata,
       type: ServiceType.CLUSTER_IP,
       selector: deployment,
