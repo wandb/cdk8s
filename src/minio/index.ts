@@ -2,9 +2,9 @@ import { ApiObjectMetadata, ChartProps, Size } from 'cdk8s'
 import {
   Deployment,
   EnvValue,
-  Job,
   PersistentVolumeAccessMode,
   PersistentVolumeClaim,
+  Probe,
   Protocol,
   Service,
   ServiceType,
@@ -14,6 +14,7 @@ import { Construct } from 'constructs'
 import { BucketConfig } from '../wandb/webservice/config'
 import { WbChart } from '../common/chart'
 import { MinioConfig } from './config'
+import { RecreateJob } from '../common/job'
 
 const MINIO_REGION_NAME = 'us-east-1'
 const MINIO_BUCKET_NAME = 'wandb'
@@ -40,6 +41,8 @@ export class MinioChart extends WbChart {
     const repository = image?.repository ?? 'minio/minio'
     const tag = image?.tag ?? 'latest'
 
+    const liveness = Probe.fromHttpGet('/minio/health/live', { port: 9000 })
+    const readiness = Probe.fromHttpGet('/minio/health/ready', { port: 9000 })
     const deployment = new Deployment(this, 'minio', {
       metadata,
       replicas: 1,
@@ -50,6 +53,8 @@ export class MinioChart extends WbChart {
           args: ['minio server /data --console-address :9090'],
           ports: [{ number: 9000 }, { number: 9090 }],
           volumeMounts: [{ volume, path: '/data' }],
+          liveness,
+          readiness,
           securityContext: {
             ensureNonRoot: false,
             allowPrivilegeEscalation: true,
@@ -69,23 +74,30 @@ export class MinioChart extends WbChart {
     this.service = new Service(this, 'service', {
       metadata,
       type: ServiceType.CLUSTER_IP,
-      ports: [{ port: 9000, targetPort: 9000, protocol: Protocol.TCP }],
+      ports: [
+        { name: 'api', port: 9000, targetPort: 9000, protocol: Protocol.TCP },
+        {
+          name: 'console',
+          port: 9090,
+          targetPort: 9090,
+          protocol: Protocol.TCP,
+        },
+      ],
       selector: deployment,
     })
 
     const { client } = props
     const clientRepository = client?.image?.repository ?? 'minio/mc'
     const clientTag = client?.image?.tag ?? 'latest'
-    new Job(this, 'create-bucket-2', {
-      metadata,
 
+    new RecreateJob(this, `create-bucket`, {
+      metadata,
       containers: [
         {
           name: 'create-bucket',
           image: `${clientRepository}:${clientTag}`,
           securityContext: {
             ensureNonRoot: false,
-            allowPrivilegeEscalation: true,
             readOnlyRootFilesystem: false,
           },
           envVariables: {
@@ -100,11 +112,11 @@ export class MinioChart extends WbChart {
             '/bin/sh',
             '-c',
             `echo "Creating MinIO bucket..."
-until /bin/sh -c "mc config host add myminio http://$MINIO_SERVER_ENDPOINT $MINIO_ACCESS_KEY $MINIO_SECRET_KEY"; do
+until /bin/sh -c "mc config host add local http://$MINIO_SERVER_ENDPOINT $MINIO_ACCESS_KEY $MINIO_SECRET_KEY"; do
   echo "Waiting for MinIO server to become available..."
   sleep 3
 done
-mc mb myminio/$BUCKET_NAME --ignore-existing
+mc mb local/$BUCKET_NAME --ignore-existing
 echo "Bucket created."`,
           ],
         },

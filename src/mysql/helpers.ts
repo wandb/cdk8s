@@ -1,4 +1,4 @@
-import { EnvValue, Secret } from 'cdk8s-plus-26'
+import { ContainerProps, EnvValue, Secret } from 'cdk8s-plus-26'
 import { Construct } from 'constructs'
 import { MysqlCredentialsConfig } from './config'
 
@@ -37,5 +37,27 @@ export const mysqlConfigToEnv = (
     MYSQL: EnvValue.fromValue(
       'mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@$(MYSQL_HOST):$(MYSQL_PORT)/$(MYSQL_DATABASE)',
     ),
+  }
+}
+
+export const canConnectToDatabase = (
+  scope: Construct,
+  image: string,
+  config: MysqlCredentialsConfig,
+): ContainerProps => {
+  return {
+    name: 'check-db',
+    image,
+    securityContext: {
+      ensureNonRoot: false,
+      allowPrivilegeEscalation: true,
+      readOnlyRootFilesystem: false,
+    },
+    envVariables: { ...mysqlConfigToEnv(scope, 'init-check', config) },
+    command: [
+      'bash',
+      '-c',
+      'until mysql -h$MYSQL_HOST -p$MYSQL_PORT -u$MYSQL_USER -p$MYSQL_PASSWORD -D$MYSQL_DATABASE --execute="SELECT 1"; do echo waiting for db; sleep 2; done',
+    ],
   }
 }

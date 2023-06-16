@@ -1,1 +1,1 @@
-rm -rf ./dist && pnpm gen && kubectl apply -f ./dist --prune -l app=wandb --output=json
+rm -rf ./dist && pnpm gen && kubectl apply -f ./dist --prune -l app=wandb
