@@ -8,6 +8,8 @@ export const minioConfig = z.object({
     })
     .optional(),
 
+  storageClassName: z.string().optional(),
+
   client: z
     .object({
       image: z

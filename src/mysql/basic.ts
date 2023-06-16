@@ -4,7 +4,9 @@ import {
   PersistentVolumeAccessMode,
   PersistentVolumeClaim,
   Probe,
+  Protocol,
   Service,
+  ServiceType,
   StatefulSet,
   Volume,
 } from 'cdk8s-plus-26'
@@ -56,10 +58,14 @@ sort_buffer_size = 33554432`,
 
     const ss = new StatefulSet(this, 'mysql', {
       replicas: 1,
+      service: new Service(this, 'mysql-service', {
+        type: ServiceType.CLUSTER_IP,
+        ports: [{ port: 3306, protocol: Protocol.TCP }],
+      }),
       metadata,
       containers: [
         {
-          image: 'mysql:8.0',
+          image: 'mysql:8.0.33',
           liveness: mysqlPingCheck,
           readiness: mysqlPingCheck,
           portNumber: 3306,

@@ -29,10 +29,11 @@ export class MinioChart extends WbChart {
   private service: Service
   constructor(scope: Construct, id: string, props: MinioChartProps) {
     super(scope, id, props)
-    const { image, metadata } = props
+    const { image, metadata, storageClassName } = props
 
-    const claim = new PersistentVolumeClaim(this, 'pvc', {
+    const claim = new PersistentVolumeClaim(this, 'data', {
       metadata,
+      storageClassName,
       accessModes: [PersistentVolumeAccessMode.READ_WRITE_ONCE],
       storage: Size.gibibytes(10),
     })

@@ -192,6 +192,9 @@
               },
               "additionalProperties": false
             },
+            "storageClassName": {
+              "type": "string"
+            },
             "client": {
               "type": "object",
               "properties": {
