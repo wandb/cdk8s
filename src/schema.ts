@@ -4,6 +4,8 @@ import * as fs from 'fs'
 import { mysqlConfig } from './mysql/config'
 import { bucketConfig, ssoConfig } from './wandb/webservice/config'
 import { ownerReferenceConfig } from './common/owner-reference'
+import { minioConfig } from './minio/config'
+import { redisConfig } from './redis/config'
 
 const metadataConfig = z.object({
   ownerReference: z.array(ownerReferenceConfig).default([]),
@@ -15,11 +17,14 @@ export const schema = z
   .object({
     $schema: z.string().optional(),
 
+    namespace: z.string().default('default').optional(),
+
     common: z
       .object({
         metadata: metadataConfig.default({}),
       })
-      .default({}),
+      .default({})
+      .optional(),
 
     webServices: z
       .object({
@@ -30,21 +35,13 @@ export const schema = z
       })
       .optional(),
 
-    minio: z
-      .object({
-        image: z
-          .object({
-            repository: z.string(),
-            tag: z.string(),
-          })
-          .optional(),
-      })
-      .optional(),
-
+    sso: ssoConfig.optional(),
     bucket: bucketConfig.optional(),
 
-    mysql: mysqlConfig,
-    sso: ssoConfig.optional(),
+    // External services
+    minio: minioConfig.optional(),
+    mysql: mysqlConfig.optional(),
+    redis: redisConfig.optional(),
   })
   .describe('Configuration schema for generating k8s manifests')
 

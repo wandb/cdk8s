@@ -1,4 +1,5 @@
-import { EnvValue } from 'cdk8s-plus-26'
+import { EnvValue, Secret } from 'cdk8s-plus-26'
+import { Construct } from 'constructs'
 import { z } from 'zod'
 
 export const oidcConfig = z.object({
@@ -10,7 +11,13 @@ export const oidcConfig = z.object({
 export type OidcConfig = z.infer<typeof oidcConfig>
 
 export const bucketConfig = z.object({
-  connectionString: z.string(),
+  connectionString: z
+    .object({
+      secret: z.string(),
+      key: z.string(),
+      checksum: z.string().optional(),
+    })
+    .or(z.string()),
   region: z.string().default('').optional(),
   kmsKey: z.string().default('').optional(),
 })
@@ -18,10 +25,22 @@ export const bucketConfig = z.object({
 export type BucketConfig = z.infer<typeof bucketConfig>
 
 export const bucketConfigToEnv = (
+  scope: Construct,
+  id: string,
   config: BucketConfig,
 ): Record<string, EnvValue> => {
   return {
-    BUCKET: EnvValue.fromValue(config.connectionString),
+    BUCKET:
+      typeof config.connectionString === 'string'
+        ? EnvValue.fromValue(config.connectionString)
+        : EnvValue.fromSecretValue({
+            secret: Secret.fromSecretName(
+              scope,
+              `${scope.node.id}-${id}-mysql-password-root`,
+              config.connectionString.secret,
+            ),
+            key: config.connectionString.key,
+          }),
     AWS_REGION: EnvValue.fromValue(config.region ?? ''),
     AWS_S3_KMS_ID: EnvValue.fromValue(config.kmsKey ?? ''),
   }

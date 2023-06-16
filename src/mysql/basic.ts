@@ -1,15 +1,29 @@
-import { ApiObjectMetadata, Chart, ChartProps } from 'cdk8s'
-import { ConfigMap, Probe, Service, StatefulSet } from 'cdk8s-plus-26'
+import { ApiObjectMetadata, ChartProps, Size } from 'cdk8s'
+import {
+  ConfigMap,
+  PersistentVolumeAccessMode,
+  PersistentVolumeClaim,
+  Probe,
+  Service,
+  StatefulSet,
+  Volume,
+} from 'cdk8s-plus-26'
 import { Construct } from 'constructs'
-import { config } from '../config'
 import { mysqlConfigToEnv } from './helpers'
 import { MysqlConfig, MysqlCredentialsConfig } from './config'
+import { WbChart } from '../common/chart'
 
 type MysqlStatefulSetChartProps = ChartProps & {
-  metadata: ApiObjectMetadata
+  metadata?: ApiObjectMetadata
 } & MysqlConfig
 
-export class MysqlStatefulSetChart extends Chart {
+const mysqlPingCheck = Probe.fromCommand([
+  'sh',
+  '-c',
+  'mysqladmin ping -u root -p$MYSQL_ROOT_PASSWORD',
+])
+
+export class MysqlStatefulSetChart extends WbChart {
   service: Service
 
   constructor(
@@ -19,7 +33,6 @@ export class MysqlStatefulSetChart extends Chart {
   ) {
     super(scope, id, props)
     const { metadata } = props
-    const liveness = Probe.fromCommand(['sh', '-c', 'mysqladmin ping -h'])
 
     new ConfigMap(this, 'initdb', {
       metadata,
@@ -35,17 +48,39 @@ sort_buffer_size = 33554432`,
       },
     })
 
+    const claim = new PersistentVolumeClaim(this, 'data', {
+      metadata,
+      accessModes: [PersistentVolumeAccessMode.READ_WRITE_ONCE],
+      storage: Size.gibibytes(10),
+    })
+
     const ss = new StatefulSet(this, 'mysql', {
       replicas: 1,
-      metadata: config.common.metadata,
+      metadata,
       containers: [
         {
-          image: 'mysql:5.7',
-          liveness,
+          image: 'mysql:8.0',
+          liveness: mysqlPingCheck,
+          readiness: mysqlPingCheck,
           portNumber: 3306,
+          securityContext: {
+            ensureNonRoot: false,
+            allowPrivilegeEscalation: true,
+            readOnlyRootFilesystem: false,
+          },
           envVariables: {
             ...mysqlConfigToEnv(scope, id, this.getCredentials()),
           },
+          volumeMounts: [
+            {
+              path: '/var/lib/mysql',
+              volume: Volume.fromPersistentVolumeClaim(
+                this,
+                'data-claim',
+                claim,
+              ),
+            },
+          ],
         },
       ],
     })

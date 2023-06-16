@@ -1,19 +1,4 @@
 # yaml-language-server: $schema=./config-schema.json
-mysql:
-  database: wandb_local
-  port: 3306
-  user: wandb
-  host: localhost
-  password:
-    secret: mysql
-    key: password
-
-bucket:
-  connectionString: s3://my-bucket
-  region: us-east-1
-
-sso:
-  oidc:
-    clientId: wandb
-    issuer: https://wandb.auth0.com
-    method: implicit
+# bucket:
+#   connectionString: 's3://justin-test'
+#   region: us-east-1

@@ -7,6 +7,10 @@
         "$schema": {
           "type": "string"
         },
+        "namespace": {
+          "type": "string",
+          "default": "default"
+        },
         "common": {
           "type": "object",
           "properties": {
@@ -95,121 +99,6 @@
           ],
           "additionalProperties": false
         },
-        "mysql": {
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "host": {
-                  "type": "string"
-                },
-                "port": {
-                  "type": "number"
-                },
-                "user": {
-                  "type": "string"
-                },
-                "database": {
-                  "type": "string"
-                },
-                "password": {
-                  "type": "object",
-                  "properties": {
-                    "secret": {
-                      "type": "string"
-                    },
-                    "key": {
-                      "type": "string"
-                    },
-                    "checksum": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "secret",
-                    "key"
-                  ],
-                  "additionalProperties": false
-                }
-              },
-              "required": [
-                "host",
-                "port",
-                "user",
-                "database",
-                "password"
-              ],
-              "additionalProperties": false
-            },
-            {
-              "type": "object",
-              "properties": {
-                "managed": {
-                  "type": "boolean",
-                  "const": true
-                },
-                "image": {
-                  "type": "object",
-                  "properties": {
-                    "repository": {
-                      "type": "string",
-                      "default": "wandb/local"
-                    },
-                    "tag": {
-                      "type": "string",
-                      "default": "latest"
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "password": {
-                  "type": "object",
-                  "properties": {
-                    "secret": {
-                      "type": "string"
-                    },
-                    "key": {
-                      "type": "string"
-                    },
-                    "checksum": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "secret",
-                    "key"
-                  ],
-                  "additionalProperties": false
-                }
-              },
-              "required": [
-                "managed",
-                "password"
-              ],
-              "additionalProperties": false
-            }
-          ]
-        },
-        "bucket": {
-          "type": "object",
-          "properties": {
-            "connectionString": {
-              "type": "string"
-            },
-            "region": {
-              "type": "string",
-              "default": ""
-            },
-            "kmsKey": {
-              "type": "string",
-              "default": ""
-            }
-          },
-          "required": [
-            "connectionString"
-          ],
-          "additionalProperties": false
-        },
         "sso": {
           "type": "object",
           "properties": {
@@ -244,12 +133,229 @@
             }
           },
           "additionalProperties": false
+        },
+        "bucket": {
+          "type": "object",
+          "properties": {
+            "connectionString": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "secret": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    },
+                    "checksum": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "secret",
+                    "key"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "region": {
+              "type": "string",
+              "default": ""
+            },
+            "kmsKey": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          "required": [
+            "connectionString"
+          ],
+          "additionalProperties": false
+        },
+        "minio": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "object",
+              "properties": {
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "client": {
+              "type": "object",
+              "properties": {
+                "image": {
+                  "type": "object",
+                  "properties": {
+                    "repository": {
+                      "type": "string"
+                    },
+                    "tag": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "mysql": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "host": {
+                  "type": "string"
+                },
+                "port": {
+                  "type": "number"
+                },
+                "user": {
+                  "type": "string"
+                },
+                "database": {
+                  "type": "string"
+                },
+                "password": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "secret": {
+                          "type": "string"
+                        },
+                        "key": {
+                          "type": "string"
+                        },
+                        "checksum": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "secret",
+                        "key"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "host",
+                "port",
+                "user",
+                "database",
+                "password"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "image": {
+                  "type": "object",
+                  "properties": {
+                    "repository": {
+                      "type": "string",
+                      "default": "wandb/local"
+                    },
+                    "tag": {
+                      "type": "string",
+                      "default": "latest"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "password": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "secret": {
+                          "type": "string"
+                        },
+                        "key": {
+                          "type": "string"
+                        },
+                        "checksum": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "secret",
+                        "key"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "redis": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "host": {
+                  "type": "string"
+                },
+                "port": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "object",
+                  "properties": {
+                    "repository": {
+                      "type": "string"
+                    },
+                    "tag": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "host",
+                "port"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "image": {
+                  "$ref": "#/definitions/wandb-config-cdk/properties/redis/anyOf/0/properties/image"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
         }
       },
-      "required": [
-        "mysql",
-        "bucket"
-      ],
       "additionalProperties": false,
       "description": "Configuration schema for generating k8s manifests"
     }
