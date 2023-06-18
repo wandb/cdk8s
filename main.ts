@@ -6,7 +6,6 @@ import { App } from 'cdk8s'
 import { WeightsAndBaisesChart } from './src/wandb'
 import { MysqlCredentialsConfig, MysqlStatefulSetChart } from './src/mysql'
 import { config } from './src/config'
-import { MinioChart } from './src/minio'
 import { logger } from './src/logger'
 import { RedisCredentialsConfig } from './src/redis/config'
 import { RedisChart } from './src/redis'
@@ -14,27 +13,6 @@ import { RedisChart } from './src/redis'
 const app = new App()
 
 const metadata = config.global?.metadata ?? {}
-
-const getBucketCredentials = () => {
-  if (config.bucket != null) {
-    if (config.minio != null)
-      logger.warn('Both minio and bucket are configured, using bucket')
-
-    return config.bucket
-  }
-
-  logger.info('Creating storage container using minio')
-  logger.warn(
-    'Minio requires a license if you are using this in a production environment',
-  )
-  const mino = new MinioChart(app, 'minio', {
-    disableResourceNameHashes: true,
-    metadata,
-    storageClassName: config.minio?.storageClassName,
-    ...config.minio,
-  })
-  return mino.getBucket()
-}
 
 const getMysqlCredentials = (): MysqlCredentialsConfig => {
   if (config.mysql != null && 'database' in config.mysql) {
@@ -45,7 +23,6 @@ const getMysqlCredentials = (): MysqlCredentialsConfig => {
   const mysqlChart = new MysqlStatefulSetChart(app, 'mysql', {
     disableResourceNameHashes: true,
     metadata,
-    storageClassName: config.minio?.storageClassName,
     ...config.mysql,
   })
 
@@ -68,8 +45,8 @@ const getRedisCredentials = (): RedisCredentialsConfig => {
 }
 
 const mysql = getMysqlCredentials()
-const bucket = getBucketCredentials()
 const redis = getRedisCredentials()
+const bucket = config.bucket
 
 new WeightsAndBaisesChart(app, 'wandb', {
   disableResourceNameHashes: true,

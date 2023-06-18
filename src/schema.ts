@@ -3,7 +3,6 @@ import { zodToJsonSchema } from 'zod-to-json-schema'
 import * as fs from 'fs'
 import { mysqlConfig } from './mysql/config'
 import { bucketConfig, ssoConfig } from './wandb/webservice/config'
-import { minioConfig } from './minio/config'
 import { redisConfig } from './redis/config'
 import { generalConfig } from './global/global'
 
@@ -25,10 +24,9 @@ export const schema = z
       .optional(),
 
     sso: ssoConfig.optional(),
-    bucket: bucketConfig.optional(),
+    bucket: bucketConfig,
 
     // External services
-    minio: minioConfig.optional(),
     mysql: mysqlConfig.optional(),
     redis: redisConfig.optional(),
   })

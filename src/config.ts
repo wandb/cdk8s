@@ -2,7 +2,7 @@ import { load } from 'js-yaml'
 import { schema } from './schema'
 import { readFileSync } from 'fs'
 import { logger } from './logger'
-
+import { z } from 'zod'
 const configPath = process.env.CONFIG_FILE ?? './config.yaml'
 
 const getConfigFromArgs = () => {
@@ -28,4 +28,21 @@ const getConfig = () => {
   return parser(file)
 }
 
-export const config = schema.parse(getConfig() ?? {})
+const pase = (): z.infer<typeof schema> => {
+  try {
+    return schema.parse(getConfig() ?? {})
+  } catch (e) {
+    if (e instanceof z.ZodError) {
+      logger.error('Invalid config file')
+      for (const issue of e.issues) {
+        logger.error(`${issue.path.join('.')}: ${issue.message}`, {
+          type: 'zod',
+          ...issue,
+        })
+      }
+    }
+  }
+  process.exit(1)
+}
+
+export const config = pase()

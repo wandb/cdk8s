@@ -25,19 +25,16 @@ function createLogger(level: string) {
           : (v: string) => v
       const message = messageColor(info.message)
 
-      return NODE_ENV === 'production'
-        ? `[${level}]: ${label} ${message} ${duration}`
-        : `[${level}]: ${gray(label)} ${message} ${duration}`
+      return `[${level}]: ${gray(label)} ${message} ${duration}`
     }),
   ]
 
-  // We dont want colors in production. They do not display correctly in cloud
-  // run console.
-  if (NODE_ENV !== 'production') format.unshift(winston.format.colorize())
-
   return winston.createLogger({
     level,
-    format: winston.format.combine(...format),
+    format:
+      NODE_ENV === 'production'
+        ? winston.format.json()
+        : winston.format.combine(...format),
     transports: [new winston.transports.Console()],
   })
 }

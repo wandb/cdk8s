@@ -184,45 +184,6 @@
           ],
           "additionalProperties": false
         },
-        "minio": {
-          "type": "object",
-          "properties": {
-            "image": {
-              "type": "object",
-              "properties": {
-                "repository": {
-                  "type": "string"
-                },
-                "tag": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
-            },
-            "storageClassName": {
-              "type": "string"
-            },
-            "client": {
-              "type": "object",
-              "properties": {
-                "image": {
-                  "type": "object",
-                  "properties": {
-                    "repository": {
-                      "type": "string"
-                    },
-                    "tag": {
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false
-                }
-              },
-              "additionalProperties": false
-            }
-          },
-          "additionalProperties": false
-        },
         "mysql": {
           "anyOf": [
             {
@@ -367,6 +328,9 @@
           ]
         }
       },
+      "required": [
+        "bucket"
+      ],
       "additionalProperties": false,
       "description": "Configuration schema for generating k8s manifests"
     }
