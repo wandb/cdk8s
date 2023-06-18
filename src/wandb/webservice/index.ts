@@ -30,8 +30,6 @@ export type WebServiceChartProps = ChartProps & {
 
 export class WebServiceChart extends WbChart {
   deployment: Deployment
-  service: Service
-  prometheus: Service
 
   constructor(scope: Construct, id: string, props: WebServiceChartProps) {
     super(scope, id, props)
@@ -81,15 +79,15 @@ export class WebServiceChart extends WbChart {
       ],
     })
 
-    this.service = new Service(this, `api`, {
-      type: ServiceType.NODE_PORT,
+    new Service(this, `api`, {
+      type: ServiceType.CLUSTER_IP,
       metadata,
       selector: this.deployment,
-      ports: [{ name: 'https', port, nodePort: 32543 }],
+      ports: [{ name: 'http', port }],
     })
 
-    this.prometheus = new Service(this, `prometheus`, {
-      type: ServiceType.NODE_PORT,
+    new Service(this, `prometheus`, {
+      type: ServiceType.CLUSTER_IP,
       metadata,
       selector: this.deployment,
       ports: [{ name: 'prometheus', port: 8181 }],

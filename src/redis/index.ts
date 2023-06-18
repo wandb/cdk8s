@@ -40,7 +40,7 @@ export class RedisChart extends WbChart {
       metadata,
       type: ServiceType.CLUSTER_IP,
       selector: deployment,
-      ports: [{ port: 6379, targetPort: 6379 }],
+      ports: [{ port: 6379 }],
     })
   }
 

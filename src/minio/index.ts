@@ -76,13 +76,8 @@ export class MinioChart extends WbChart {
       metadata,
       type: ServiceType.CLUSTER_IP,
       ports: [
-        { name: 'api', port: 9000, targetPort: 9000, protocol: Protocol.TCP },
-        {
-          name: 'console',
-          port: 9090,
-          targetPort: 9090,
-          protocol: Protocol.TCP,
-        },
+        { name: 'api', port: 9000, protocol: Protocol.TCP },
+        { name: 'console', port: 9090, protocol: Protocol.TCP },
       ],
       selector: deployment,
     })
