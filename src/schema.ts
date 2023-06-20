@@ -5,11 +5,13 @@ import { mysqlConfig } from './mysql/config'
 import { bucketConfig, ssoConfig } from './wandb/webservice/config'
 import { redisConfig } from './redis/config'
 import { generalConfig } from './global/global'
+import { licenseConfig } from './wandb/config'
 
 export const schema = z
   .object({
     $schema: z.string().optional(),
 
+    license: licenseConfig.optional(),
     namespace: z.string().default('default').optional(),
 
     global: generalConfig.optional(),

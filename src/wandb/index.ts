@@ -23,6 +23,7 @@ export class WeightsAndBaisesChart extends WbChart {
     super(scope, id, { disableResourceNameHashes: true, ...props })
 
     const { global, webServices } = props
+
     this.webService = new WebServiceChart(this, `webservice`, {
       ...props,
       ...webServices,

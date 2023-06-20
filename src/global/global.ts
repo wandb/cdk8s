@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const ownerReferenceConfig = z.object({
+const ownerReferencesConfig = z.object({
   apiVersion: z.string(),
   blockOwnerDeletion: z.boolean().optional(),
   controller: z.boolean(),
@@ -10,18 +10,14 @@ const ownerReferenceConfig = z.object({
 })
 
 const metadataConfig = z.object({
-  ownerReference: z.array(ownerReferenceConfig).default([]),
-  annotations: z.record(z.string()).default({}),
-  labels: z.record(z.string()).default({}),
+  ownerReferences: z.array(ownerReferencesConfig).default([]).optional(),
+  annotations: z.record(z.string()).default({}).optional(),
+  labels: z.record(z.string()).default({}).optional(),
 })
 
 export const generalConfig = z.object({
-  metadata: z
-    .object({
-      metadata: metadataConfig.optional(),
-      storageClassName: z.string().optional(),
-    })
-    .optional(),
+  metadata: metadataConfig.optional(),
+  storageClassName: z.string().optional(),
 })
 
 export type GeneralConfig = z.infer<typeof generalConfig>

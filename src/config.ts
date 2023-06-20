@@ -3,6 +3,7 @@ import { schema } from './schema'
 import { readFileSync } from 'fs'
 import { logger } from './logger'
 import { z } from 'zod'
+
 const configPath = process.env.CONFIG_FILE ?? './config.yaml'
 
 const getConfigFromArgs = () => {
@@ -19,8 +20,8 @@ const getConfigFromArgs = () => {
 }
 
 const getConfig = () => {
-  const cmdArg = getConfigFromArgs()
-  if (cmdArg != null) return config
+  const cmdArg: any = getConfigFromArgs()
+  if (cmdArg != null) return cmdArg
 
   logger.info(`Loading config from ${configPath}`)
   const file = readFileSync(configPath, 'utf8')
@@ -29,8 +30,11 @@ const getConfig = () => {
 }
 
 const pase = (): z.infer<typeof schema> => {
+  const cfg = getConfig() ?? {}
+  logger.info('Validating config', cfg)
+  logger.info(JSON.stringify(cfg))
   try {
-    return schema.parse(getConfig() ?? {})
+    return schema.parse(cfg)
   } catch (e) {
     if (e instanceof z.ZodError) {
       logger.error('Invalid config file')

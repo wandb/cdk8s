@@ -7,6 +7,32 @@
         "$schema": {
           "type": "string"
         },
+        "license": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "secret": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "string"
+                },
+                "checksum": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "secret",
+                "key"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
         "namespace": {
           "type": "string",
           "default": "default"
@@ -17,66 +43,60 @@
             "metadata": {
               "type": "object",
               "properties": {
-                "metadata": {
-                  "type": "object",
-                  "properties": {
-                    "ownerReference": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "apiVersion": {
-                            "type": "string"
-                          },
-                          "blockOwnerDeletion": {
-                            "type": "boolean"
-                          },
-                          "controller": {
-                            "type": "boolean"
-                          },
-                          "kind": {
-                            "type": "string"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "uid": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "apiVersion",
-                          "controller",
-                          "kind",
-                          "name",
-                          "uid"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "default": []
-                    },
-                    "annotations": {
-                      "type": "object",
-                      "additionalProperties": {
+                "ownerReferences": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "apiVersion": {
                         "type": "string"
                       },
-                      "default": {}
-                    },
-                    "labels": {
-                      "type": "object",
-                      "additionalProperties": {
+                      "blockOwnerDeletion": {
+                        "type": "boolean"
+                      },
+                      "controller": {
+                        "type": "boolean"
+                      },
+                      "kind": {
                         "type": "string"
                       },
-                      "default": {}
-                    }
+                      "name": {
+                        "type": "string"
+                      },
+                      "uid": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "apiVersion",
+                      "controller",
+                      "kind",
+                      "name",
+                      "uid"
+                    ],
+                    "additionalProperties": false
                   },
-                  "additionalProperties": false
+                  "default": []
                 },
-                "storageClassName": {
-                  "type": "string"
+                "annotations": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "default": {}
+                },
+                "labels": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "default": {}
                 }
               },
               "additionalProperties": false
+            },
+            "storageClassName": {
+              "type": "string"
             }
           },
           "additionalProperties": false
