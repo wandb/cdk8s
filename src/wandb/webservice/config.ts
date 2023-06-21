@@ -2,6 +2,16 @@ import { EnvValue, Secret } from 'cdk8s-plus-26'
 import { Construct } from 'constructs'
 import { z } from 'zod'
 
+export const licenseConfig = z
+  .object({
+    secret: z.string(),
+    key: z.string(),
+    checksum: z.string().optional(),
+  })
+  .or(z.string())
+
+export type LicenseConfig = z.infer<typeof licenseConfig>
+
 export const oidcConfig = z.object({
   clientId: z.string(),
   issuer: z.string(),

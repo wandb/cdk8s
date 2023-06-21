@@ -3,12 +3,14 @@ import {
   Deployment,
   EnvValue,
   Probe,
+  Secret,
   Service,
   ServiceType,
 } from 'cdk8s-plus-26'
 import { Construct } from 'constructs'
 import {
   BucketConfig,
+  LicenseConfig,
   SsoConfig,
   bucketConfigToEnv,
   ssoConfigToEnv,
@@ -26,6 +28,7 @@ export type WebServiceChartProps = ChartProps & {
   bucket: BucketConfig
   redis: RedisCredentialsConfig
   sso?: SsoConfig
+  license?: LicenseConfig
 }
 
 export class WebServiceChart extends WbChart {
@@ -41,7 +44,7 @@ export class WebServiceChart extends WbChart {
     const readiness = Probe.fromHttpGet('/ready', { port })
 
     const repository = image?.repository ?? 'wandb/local'
-    const tag = image?.tag ?? 'latest'
+    const tag = image?.tag ?? '0.30.0'
     this.deployment = new Deployment(this, `local`, {
       replicas: 1,
       metadata,
@@ -73,6 +76,17 @@ export class WebServiceChart extends WbChart {
             ...mysqlConfigToEnv(this, 'deployment-mysql', mysql),
             ...bucketConfigToEnv(this, 'deployment-s3', bucket),
             ...(sso != null ? ssoConfigToEnv(sso) : {}),
+            LICENSE:
+              props.license == null || typeof props.license === 'string'
+                ? EnvValue.fromValue(props.license ?? '')
+                : EnvValue.fromSecretValue({
+                    secret: Secret.fromSecretName(
+                      scope,
+                      `${scope.node.id}-${id}-mysql-password`,
+                      props.license.secret,
+                    ),
+                    key: props.license.key,
+                  }),
             BUCKET_QUEUE: EnvValue.fromValue('internal://'),
           },
         },

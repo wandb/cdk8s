@@ -5,7 +5,7 @@ import { mysqlConfig } from './mysql/config'
 import { bucketConfig, ssoConfig } from './wandb/webservice/config'
 import { redisConfig } from './redis/config'
 import { generalConfig } from './global/global'
-import { licenseConfig } from './wandb/config'
+import { licenseConfig } from './wandb/webservice/config'
 
 export const schema = z
   .object({

@@ -19,6 +19,7 @@ export class RedisChart extends WbChart {
     const ping = Probe.fromCommand(['sh', '-c', 'redis-cli ping'])
     const repository = REDIS_DEFAULT_REPOSITORY
     const tag = REDIS_DEFAULT_TAG
+
     const deployment = new Deployment(this, 'redis', {
       metadata,
       replicas: 1,

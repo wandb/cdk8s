@@ -48,8 +48,6 @@ const mysql = getMysqlCredentials()
 const redis = getRedisCredentials()
 const bucket = config.bucket
 
-console.log(config)
-
 new WeightsAndBaisesChart(app, 'wandb', {
   disableResourceNameHashes: true,
   global: { metadata },
