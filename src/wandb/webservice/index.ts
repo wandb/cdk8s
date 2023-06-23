@@ -88,6 +88,7 @@ export class WebServiceChart extends WbChart {
                     key: props.license.key,
                   }),
             BUCKET_QUEUE: EnvValue.fromValue('internal://'),
+            LOGGING_ENABLED: EnvValue.fromValue('true'),
           },
         },
       ],
