@@ -46,7 +46,7 @@ const getRedisCredentials = (): RedisCredentialsConfig => {
 
 const mysql = getMysqlCredentials()
 const redis = getRedisCredentials()
-const bucket = config.bucket
+const bucket = config.bucket ?? { connectionString: 'unknown://bucket' }
 
 new WeightsAndBaisesChart(app, 'wandb', {
   disableResourceNameHashes: true,

@@ -33,7 +33,7 @@ export const schema = z
       .optional(),
 
     sso: ssoConfig.optional(),
-    bucket: bucketConfig,
+    bucket: bucketConfig.optional(),
 
     // External services
     mysql: mysqlConfig.optional(),

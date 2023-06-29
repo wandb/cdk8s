@@ -27,7 +27,8 @@ export const bucketConfig = z.object({
       key: z.string(),
       checksum: z.string().optional(),
     })
-    .or(z.string()),
+    .or(z.string())
+    .default(''),
   region: z.string().default('').optional(),
   kmsKey: z.string().default('').optional(),
 })
