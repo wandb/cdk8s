@@ -11,7 +11,7 @@ import {
   Volume,
 } from 'cdk8s-plus-26'
 import { Construct } from 'constructs'
-import { BucketConfig } from '../wandb/webservice/config'
+import { BucketConfig } from '../wandb/app/config'
 import { WbChart } from '../global/chart'
 import { MinioConfig } from './config'
 import { RecreateJob } from '../global/job'

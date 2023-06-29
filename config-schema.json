@@ -101,7 +101,7 @@
           },
           "additionalProperties": false
         },
-        "webServices": {
+        "app": {
           "type": "object",
           "properties": {
             "image": {

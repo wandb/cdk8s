@@ -21,7 +21,7 @@ import { RedisCredentialsConfig } from '../../redis/config'
 import { canConnectToDatabase, mysqlConfigToEnv } from '../../mysql/helpers'
 import { canConnectToRedis, redisConfigToEnv } from '../../redis/helpers'
 
-export type WebServiceChartProps = ChartProps & {
+export type AppChartProps = ChartProps & {
   metadata?: ApiObjectMetadata
   image?: { repository?: string; tag?: string }
   mysql: MysqlCredentialsConfig
@@ -31,10 +31,11 @@ export type WebServiceChartProps = ChartProps & {
   license?: LicenseConfig
 }
 
-export class WebServiceChart extends WbChart {
+export class AppChart extends WbChart {
   deployment: Deployment
+  service: Service
 
-  constructor(scope: Construct, id: string, props: WebServiceChartProps) {
+  constructor(scope: Construct, id: string, props: AppChartProps) {
     super(scope, id, props)
     const { mysql, redis, sso, bucket, image, metadata } = props
 
@@ -94,7 +95,7 @@ export class WebServiceChart extends WbChart {
       ],
     })
 
-    new Service(this, `api`, {
+    this.service = new Service(this, `api`, {
       type: ServiceType.CLUSTER_IP,
       metadata,
       selector: this.deployment,

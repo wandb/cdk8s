@@ -2,10 +2,10 @@ import { z } from 'zod'
 import { zodToJsonSchema } from 'zod-to-json-schema'
 import * as fs from 'fs'
 import { mysqlConfig } from './mysql/config'
-import { bucketConfig, ssoConfig } from './wandb/webservice/config'
+import { bucketConfig, ssoConfig } from './wandb/app/config'
 import { redisConfig } from './redis/config'
-import { generalConfig } from './global/global'
-import { licenseConfig } from './wandb/webservice/config'
+import { generalConfig, metadataConfig } from './global/global'
+import { licenseConfig } from './wandb/app/config'
 
 export const schema = z
   .object({
@@ -16,14 +16,19 @@ export const schema = z
 
     global: generalConfig.optional(),
 
-    webServices: z
+    app: z
       .object({
+        metadata: metadataConfig.optional(),
         image: z.object({
           repository: z.string(),
           tag: z.string(),
         }),
       })
       .optional(),
+
+    ingress: z.object({
+      metadata: metadataConfig.optional(),
+    }),
 
     sso: ssoConfig.optional(),
     bucket: bucketConfig,

@@ -1,18 +1,22 @@
-import { Chart, ChartProps } from 'cdk8s'
+import { ApiObjectMetadata, Chart, ChartProps } from 'cdk8s'
 import { Construct } from 'constructs'
-import { WebServiceChart, WebServiceChartProps } from './webservice'
+import { AppChart, AppChartProps } from './app'
 import { WeaveChart } from './weave'
 import { merge } from 'lodash'
 import { WbChart } from '../global/chart'
 import { GeneralConfig } from '../global/global'
+import { IngressChart } from './ingress'
 
 type WeightsAndBaisesChartConfig = ChartProps & {
   global: GeneralConfig
-  webServices: WebServiceChartProps
+  app: AppChartProps
+  ingress?: {
+    metadata?: ApiObjectMetadata
+  }
 }
 
 export class WeightsAndBaisesChart extends WbChart {
-  webService: Chart
+  app: AppChart
   weave: Chart
 
   constructor(
@@ -22,13 +26,22 @@ export class WeightsAndBaisesChart extends WbChart {
   ) {
     super(scope, id, { disableResourceNameHashes: true, ...props })
 
-    const { global, webServices } = props
+    const { global, app, ingress } = props
 
-    this.webService = new WebServiceChart(this, `webservice`, {
+    this.app = new AppChart(this, `webservice`, {
       ...props,
-      ...webServices,
-      metadata: merge(global.metadata, webServices.metadata),
+      ...app,
+      metadata: merge(global.metadata, app.metadata),
     })
     this.weave = new WeaveChart(this, `weave`, props)
+
+    new IngressChart(this, `ingress`, {
+      metadata: merge(global.metadata, ingress?.metadata ?? {}),
+      consoleService: {
+        name: 'console-service',
+        namespace: 'wandb',
+      },
+      app: this.app.service,
+    })
   }
 }

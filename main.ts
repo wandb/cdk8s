@@ -51,7 +51,7 @@ const bucket = config.bucket
 new WeightsAndBaisesChart(app, 'wandb', {
   disableResourceNameHashes: true,
   global: { metadata },
-  webServices: { ...config, ...config.webServices, mysql, bucket, redis },
+  app: { ...config, ...config.app, mysql, bucket, redis },
 })
 
 app.synth()

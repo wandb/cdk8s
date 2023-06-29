@@ -9,7 +9,7 @@ const ownerReferencesConfig = z.object({
   uid: z.string(),
 })
 
-const metadataConfig = z.object({
+export const metadataConfig = z.object({
   ownerReferences: z.array(ownerReferencesConfig).default([]).optional(),
   annotations: z.record(z.string()).default({}).optional(),
   labels: z.record(z.string()).default({}).optional(),
