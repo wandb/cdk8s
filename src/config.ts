@@ -31,8 +31,7 @@ const getConfig = () => {
 
 const pase = (): z.infer<typeof schema> => {
   const cfg = getConfig() ?? {}
-  logger.info('Validating config', cfg)
-  logger.info(JSON.stringify(cfg))
+  logger.info('Validating config')
   try {
     return schema.parse(cfg)
   } catch (e) {
@@ -46,7 +45,7 @@ const pase = (): z.infer<typeof schema> => {
       }
     }
   }
-  process.exit(1)
+  return cfg
 }
 
 export const config = pase()

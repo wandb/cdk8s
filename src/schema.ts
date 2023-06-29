@@ -26,9 +26,11 @@ export const schema = z
       })
       .optional(),
 
-    ingress: z.object({
-      metadata: metadataConfig.optional(),
-    }),
+    ingress: z
+      .object({
+        metadata: metadataConfig.optional(),
+      })
+      .optional(),
 
     sso: ssoConfig.optional(),
     bucket: bucketConfig,
