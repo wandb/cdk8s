@@ -50,7 +50,8 @@ const bucket = config.bucket ?? { connectionString: 'unknown://bucket' }
 
 new WeightsAndBaisesChart(app, 'wandb', {
   disableResourceNameHashes: true,
-  global: { metadata },
+  ...config,
+  global: { ...config.global, metadata },
   app: { ...config, ...config.app, mysql, bucket, redis },
 })
 

@@ -10,8 +10,9 @@ import {
 import { Construct } from 'constructs'
 
 type IngressChartProps = {
+  defaultBackend?: 'app' | 'console'
   metadata: ApiObjectMetadata
-  consoleService: {
+  console: {
     name: string
     namespace: string
   }
@@ -22,26 +23,30 @@ export class IngressChart extends Chart {
   constructor(scope: Construct, id: string, props: IngressChartProps) {
     super(scope, id, { disableResourceNameHashes: true })
 
-    const { app, consoleService, metadata } = props
+    const { app, console: consoleService, metadata, defaultBackend } = props
     const console = new Service(this, 'console', {
       type: ServiceType.EXTERNAL_NAME,
       externalName: `${consoleService.name}.${consoleService.namespace}.svc.cluster.local`,
       ports: [{ port: 9090, protocol: Protocol.TCP }],
     })
 
+    const consoleBackend = IngressBackend.fromService(console)
+    const appBackend = IngressBackend.fromService(app)
+
     new Ingress(this, `ingress`, {
       metadata,
-      defaultBackend: IngressBackend.fromService(app),
+      defaultBackend:
+        defaultBackend === 'console' ? consoleBackend : appBackend,
       rules: [
         {
           path: '/console',
-          backend: IngressBackend.fromService(console),
+          backend: consoleBackend,
           pathType: HttpIngressPathType.PREFIX,
         },
         {
           path: '/__weave',
           pathType: HttpIngressPathType.PREFIX,
-          backend: IngressBackend.fromService(app),
+          backend: appBackend,
         },
       ],
     })

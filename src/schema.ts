@@ -16,19 +16,25 @@ export const schema = z
 
     global: generalConfig.optional(),
 
+    console: z
+      .object({
+        name: z.string().optional(),
+        namespace: z.string().optional(),
+      })
+      .optional(),
+
     app: z
       .object({
         metadata: metadataConfig.optional(),
-        image: z.object({
-          repository: z.string(),
-          tag: z.string(),
-        }),
+        image: z.object({ repository: z.string(), tag: z.string() }),
+        extraEnvs: z.record(z.string()).optional(),
       })
       .optional(),
 
     ingress: z
       .object({
         metadata: metadataConfig.optional(),
+        defaultBackend: z.literal('console').or(z.literal('app')).optional(),
       })
       .optional(),
 

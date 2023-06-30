@@ -29,6 +29,7 @@ export type AppChartProps = ChartProps & {
   redis: RedisCredentialsConfig
   sso?: SsoConfig
   license?: LicenseConfig
+  extraEnvs?: Record<string, string>
 }
 
 export class AppChart extends WbChart {
@@ -37,7 +38,7 @@ export class AppChart extends WbChart {
 
   constructor(scope: Construct, id: string, props: AppChartProps) {
     super(scope, id, props)
-    const { mysql, redis, sso, bucket, image, metadata } = props
+    const { mysql, redis, sso, bucket, image, metadata, extraEnvs } = props
 
     const port = 8080
     const liveness = Probe.fromHttpGet('/healthz', { port })
@@ -90,6 +91,7 @@ export class AppChart extends WbChart {
                   }),
             BUCKET_QUEUE: EnvValue.fromValue('internal://'),
             LOGGING_ENABLED: EnvValue.fromValue('true'),
+            ...extraEnvs,
           },
         },
       ],

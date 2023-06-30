@@ -101,6 +101,18 @@
           },
           "additionalProperties": false
         },
+        "console": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
         "app": {
           "type": "object",
           "properties": {
@@ -122,6 +134,12 @@
                 "tag"
               ],
               "additionalProperties": false
+            },
+            "extraEnvs": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
             }
           },
           "required": [
@@ -134,6 +152,13 @@
           "properties": {
             "metadata": {
               "$ref": "#/definitions/wandb-config-cdk/properties/global/properties/metadata"
+            },
+            "defaultBackend": {
+              "type": "string",
+              "enum": [
+                "console",
+                "app"
+              ]
             }
           },
           "additionalProperties": false
