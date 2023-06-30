@@ -104,6 +104,9 @@
         "app": {
           "type": "object",
           "properties": {
+            "metadata": {
+              "$ref": "#/definitions/wandb-config-cdk/properties/global/properties/metadata"
+            },
             "image": {
               "type": "object",
               "properties": {
@@ -124,6 +127,15 @@
           "required": [
             "image"
           ],
+          "additionalProperties": false
+        },
+        "ingress": {
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "$ref": "#/definitions/wandb-config-cdk/properties/global/properties/metadata"
+            }
+          },
           "additionalProperties": false
         },
         "sso": {
@@ -188,7 +200,8 @@
                 {
                   "type": "string"
                 }
-              ]
+              ],
+              "default": ""
             },
             "region": {
               "type": "string",
@@ -199,9 +212,6 @@
               "default": ""
             }
           },
-          "required": [
-            "connectionString"
-          ],
           "additionalProperties": false
         },
         "mysql": {
@@ -348,9 +358,6 @@
           ]
         }
       },
-      "required": [
-        "bucket"
-      ],
       "additionalProperties": false,
       "description": "Configuration schema for generating k8s manifests"
     }

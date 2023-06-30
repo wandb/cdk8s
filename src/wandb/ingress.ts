@@ -3,6 +3,7 @@ import {
   HttpIngressPathType,
   Ingress,
   IngressBackend,
+  Protocol,
   Service,
   ServiceType,
 } from 'cdk8s-plus-26'
@@ -25,6 +26,7 @@ export class IngressChart extends Chart {
     const console = new Service(this, 'console', {
       type: ServiceType.EXTERNAL_NAME,
       externalName: `${consoleService.name}.${consoleService.namespace}.svc.cluster.local`,
+      ports: [{ port: 9090, protocol: Protocol.TCP }],
     })
 
     new Ingress(this, `ingress`, {
