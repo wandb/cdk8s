@@ -61,6 +61,7 @@ sort_buffer_size = 33554432`,
     const ss = new StatefulSet(this, 'mysql', {
       replicas: 1,
       service: new Service(this, 'service', {
+        metadata,
         type: ServiceType.CLUSTER_IP,
         ports: [{ port: 3306, protocol: Protocol.TCP }],
       }),
