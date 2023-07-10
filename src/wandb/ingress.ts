@@ -1,34 +1,25 @@
-import { ApiObjectMetadata, Chart } from 'cdk8s'
+import { ApiObjectMetadata, ChartProps } from 'cdk8s'
 import {
   HttpIngressPathType,
   Ingress,
   IngressBackend,
-  Protocol,
   Service,
-  ServiceType,
 } from 'cdk8s-plus-26'
 import { Construct } from 'constructs'
+import { WbChart } from '../global/chart'
 
-type IngressChartProps = {
+type IngressChartProps = ChartProps & {
   defaultBackend?: 'app' | 'console'
   metadata: ApiObjectMetadata
-  console: {
-    name: string
-    namespace: string
-  }
+  console: Service
   app: Service
 }
 
-export class IngressChart extends Chart {
+export class IngressChart extends WbChart {
   constructor(scope: Construct, id: string, props: IngressChartProps) {
-    super(scope, id, { disableResourceNameHashes: true })
+    super(scope, id, props)
 
-    const { app, console: consoleService, metadata, defaultBackend } = props
-    const console = new Service(this, 'console', {
-      type: ServiceType.EXTERNAL_NAME,
-      externalName: `${consoleService.name}.${consoleService.namespace}.svc.cluster.local`,
-      ports: [{ port: 9090, protocol: Protocol.TCP }],
-    })
+    const { app, metadata, defaultBackend, console } = props
 
     const consoleBackend = IngressBackend.fromService(console)
     const appBackend = IngressBackend.fromService(app)

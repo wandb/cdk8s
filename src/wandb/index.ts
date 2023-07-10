@@ -1,4 +1,4 @@
-import { ApiObjectMetadata, Chart, ChartProps } from 'cdk8s'
+import { ApiObjectMetadata, ChartProps } from 'cdk8s'
 import { Construct } from 'constructs'
 import { AppChart, AppChartProps } from './app'
 import { WeaveChart } from './weave'
@@ -6,14 +6,12 @@ import { merge } from 'lodash'
 import { WbChart } from '../global/chart'
 import { GeneralConfig } from '../global/global'
 import { IngressChart } from './ingress'
+import { ConsoleChart, ConsoleChartProps } from './console'
 
 type WeightsAndBaisesChartConfig = ChartProps & {
   global: GeneralConfig
   app: AppChartProps
-  console?: {
-    name?: string
-    namespace?: string
-  }
+  console?: ConsoleChartProps
   ingress?: {
     defaultBackend?: 'app' | 'console'
     metadata?: ApiObjectMetadata
@@ -22,7 +20,8 @@ type WeightsAndBaisesChartConfig = ChartProps & {
 
 export class WeightsAndBaisesChart extends WbChart {
   app: AppChart
-  weave: Chart
+  weave: WeaveChart
+  console: ConsoleChart
 
   constructor(
     scope: Construct,
@@ -39,14 +38,17 @@ export class WeightsAndBaisesChart extends WbChart {
       metadata: merge(global.metadata, app.metadata),
     })
     this.weave = new WeaveChart(this, `weave`, props)
+    this.console = new ConsoleChart(this, `console`, {
+      ...props,
+      ...console,
+      metadata: merge(global.metadata, console?.metadata),
+    })
 
     new IngressChart(this, `ingress`, {
-      metadata: merge(global.metadata, ingress?.metadata ?? {}),
+      ...props,
       ...ingress,
-      console: {
-        name: console?.name ?? 'console-service',
-        namespace: console?.namespace ?? 'wandb',
-      },
+      metadata: merge(global.metadata, ingress?.metadata ?? {}),
+      console: this.console.service,
       app: this.app.service,
     })
   }

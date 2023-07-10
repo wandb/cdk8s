@@ -18,6 +18,8 @@ export const schema = z
 
     console: z
       .object({
+        metadata: metadataConfig.optional(),
+        image: z.object({ repository: z.string(), tag: z.string() }),
         name: z.string().optional(),
         namespace: z.string().optional(),
       })

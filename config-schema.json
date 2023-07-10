@@ -104,6 +104,25 @@
         "console": {
           "type": "object",
           "properties": {
+            "metadata": {
+              "$ref": "#/definitions/wandb-config-cdk/properties/global/properties/metadata"
+            },
+            "image": {
+              "type": "object",
+              "properties": {
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "repository",
+                "tag"
+              ],
+              "additionalProperties": false
+            },
             "name": {
               "type": "string"
             },
@@ -111,6 +130,9 @@
               "type": "string"
             }
           },
+          "required": [
+            "image"
+          ],
           "additionalProperties": false
         },
         "app": {
