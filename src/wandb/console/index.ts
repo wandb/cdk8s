@@ -67,6 +67,7 @@ export class ConsoleChart extends WbChart {
       metadata,
       replicas: 1,
       serviceAccount: sa,
+      automountServiceAccountToken: true,
       containers: [
         {
           image: `${repository}:${tag}`,
