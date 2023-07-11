@@ -1,8 +1,12 @@
 import {
+  ApiResource,
   Deployment,
   EnvValue,
   Probe,
+  Role,
+  RoleBinding,
   Service,
+  ServiceAccount,
   ServiceType,
 } from 'cdk8s-plus-26'
 import { WbChart } from '../../global/chart'
@@ -20,17 +24,49 @@ export class ConsoleChart extends WbChart {
   service: Service
   constructor(scope: Construct, id: string, props: ConsoleChartProps) {
     super(scope, id, props)
-    const { image, metadata } = props
+    const { metadata } = props
+
+    // TODO: Reduce scope
+    const role = new Role(this, `role`, { metadata })
+    role.allow(
+      ['get', 'list', 'watch', 'delete', 'update', 'patch', 'create'],
+      ApiResource.PODS,
+      ApiResource.DEPLOYMENTS,
+      ApiResource.STATEFUL_SETS,
+      ApiResource.POD_DISRUPTION_BUDGETS,
+      ApiResource.NODES,
+      ApiResource.SECRETS,
+      ApiResource.SERVICE_ACCOUNTS,
+      ApiResource.ROLES,
+      ApiResource.ROLE_BINDINGS,
+      ApiResource.BINDINGS,
+      ApiResource.NODES,
+      ApiResource.HORIZONTAL_POD_AUTOSCALERS,
+      ApiResource.REPLICA_SETS,
+      ApiResource.CONTROLLER_REVISIONS,
+      ApiResource.REPLICATION_CONTROLLERS,
+      ApiResource.ENDPOINTS,
+      ApiResource.CONFIG_MAPS,
+      ApiResource.INGRESSES,
+      ApiResource.INGRESS_CLASSES,
+    )
+
+    const sa = new ServiceAccount(this, `service-account`, { metadata })
+    const binding = new RoleBinding(this, `binding`, { metadata, role })
+    binding.addSubjects(sa)
+
+    const { image } = props
+    const repository = image?.repository ?? 'wandb/console'
+    const tag = image?.tag ?? 'latest'
+
     const port = 8081
     const liveness = Probe.fromHttpGet('/healthy', { port })
     const readiness = Probe.fromHttpGet('/ready', { port })
 
-    const repository = image?.repository ?? 'wandb/console'
-    const tag = image?.tag ?? 'latest'
-
     const deployment = new Deployment(this, `console`, {
       metadata,
       replicas: 1,
+      serviceAccount: sa,
       containers: [
         {
           image: `${repository}:${tag}`,
