@@ -130,9 +130,6 @@
               "type": "string"
             }
           },
-          "required": [
-            "image"
-          ],
           "additionalProperties": false
         },
         "app": {
@@ -164,9 +161,6 @@
               }
             }
           },
-          "required": [
-            "image"
-          ],
           "additionalProperties": false
         },
         "ingress": {

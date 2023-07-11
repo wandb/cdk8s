@@ -19,7 +19,7 @@ export const schema = z
     console: z
       .object({
         metadata: metadataConfig.optional(),
-        image: z.object({ repository: z.string(), tag: z.string() }),
+        image: z.object({ repository: z.string(), tag: z.string() }).optional(),
         name: z.string().optional(),
         namespace: z.string().optional(),
       })
@@ -28,7 +28,7 @@ export const schema = z
     app: z
       .object({
         metadata: metadataConfig.optional(),
-        image: z.object({ repository: z.string(), tag: z.string() }),
+        image: z.object({ repository: z.string(), tag: z.string() }).optional(),
         extraEnvs: z.record(z.string()).optional(),
       })
       .optional(),
