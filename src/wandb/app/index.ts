@@ -46,8 +46,8 @@ export class AppChart extends WbChart {
     const readiness = Probe.fromHttpGet('/ready', { port })
 
     const repository = image?.repository ?? 'wandb/local'
-    const tag = image?.tag ?? '0.30.0'
-    this.deployment = new Deployment(this, `local`, {
+    const tag = image?.tag ?? 'latest'
+    this.deployment = new Deployment(this, `app`, {
       replicas: 1,
       metadata,
       podMetadata: {

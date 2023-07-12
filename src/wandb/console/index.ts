@@ -1,10 +1,11 @@
 import {
   ApiResource,
+  ClusterRole,
+  ClusterRoleBinding,
   Deployment,
   EnvValue,
+  ImagePullPolicy,
   Probe,
-  Role,
-  RoleBinding,
   Service,
   ServiceAccount,
   ServiceType,
@@ -27,7 +28,7 @@ export class ConsoleChart extends WbChart {
     const { metadata } = props
 
     // TODO: Reduce scope
-    const role = new Role(this, `role`, { metadata })
+    const role = new ClusterRole(this, `role`, { metadata })
     role.allow(
       ['get', 'list', 'watch', 'delete', 'update', 'patch', 'create'],
       ApiResource.PODS,
@@ -49,10 +50,14 @@ export class ConsoleChart extends WbChart {
       ApiResource.CONFIG_MAPS,
       ApiResource.INGRESSES,
       ApiResource.INGRESS_CLASSES,
+      ApiResource.PRIORITY_LEVEL_CONFIGURATIONS,
+      ApiResource.NAMESPACES,
+      ApiResource.custom({ apiGroup: '', resourceType: 'pods/log' }),
+      ApiResource.custom({ apiGroup: 'metrics.k8s.io', resourceType: 'nodes' }),
     )
 
     const sa = new ServiceAccount(this, `service-account`, { metadata })
-    const binding = new RoleBinding(this, `binding`, { metadata, role })
+    const binding = new ClusterRoleBinding(this, `binding`, { metadata, role })
     binding.addSubjects(sa)
 
     const { image } = props
@@ -71,6 +76,7 @@ export class ConsoleChart extends WbChart {
       containers: [
         {
           image: `${repository}:${tag}`,
+          imagePullPolicy: ImagePullPolicy.ALWAYS,
           liveness,
           readiness,
           securityContext: {
