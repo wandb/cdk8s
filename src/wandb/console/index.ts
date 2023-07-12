@@ -54,6 +54,10 @@ export class ConsoleChart extends WbChart {
       ApiResource.NAMESPACES,
       ApiResource.custom({ apiGroup: '', resourceType: 'pods/log' }),
       ApiResource.custom({ apiGroup: 'metrics.k8s.io', resourceType: 'nodes' }),
+      ApiResource.custom({
+        apiGroup: 'apps.wandb.com',
+        resourceType: 'weightsandbiases',
+      }),
     )
 
     const sa = new ServiceAccount(this, `service-account`, { metadata })
