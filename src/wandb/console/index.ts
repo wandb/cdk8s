@@ -69,7 +69,7 @@ export class ConsoleChart extends WbChart {
     const repository = image?.repository ?? 'wandb/console'
     const tag = image?.tag ?? 'latest'
 
-    const port = 8081
+    const port = 8082
     const liveness = Probe.fromHttpGet('/healthy', { port })
     const readiness = Probe.fromHttpGet('/ready', { port })
 
