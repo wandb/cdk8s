@@ -2,6 +2,7 @@ import {
   ApiResource,
   ClusterRole,
   ClusterRoleBinding,
+  Cpu,
   Deployment,
   EnvValue,
   ImagePullPolicy,
@@ -11,7 +12,7 @@ import {
   ServiceType,
 } from 'cdk8s-plus-26'
 import { WbChart } from '../../global/chart'
-import { ApiObjectMetadata, ChartProps } from 'cdk8s'
+import { ApiObjectMetadata, ChartProps, Size } from 'cdk8s'
 import { Construct } from 'constructs'
 
 export type ConsoleChartProps = ChartProps & {
@@ -89,6 +90,10 @@ export class ConsoleChart extends WbChart {
             allowPrivilegeEscalation: true,
             readOnlyRootFilesystem: false,
           },
+          resources: {
+            cpu: { request: Cpu.millis(100), limit: Cpu.millis(500) },
+            memory: { request: Size.mebibytes(10), limit: Size.mebibytes(30) },
+          },
           envVariables: {
             OPERATOR_NAME: EnvValue.fromValue(props.name ?? 'wandb'),
             OPERATOR_NAMESPACE: EnvValue.fromValue(
@@ -103,7 +108,7 @@ export class ConsoleChart extends WbChart {
       metadata,
       type: ServiceType.CLUSTER_IP,
       selector: deployment,
-      ports: [{ name: 'app', port: 8081 }],
+      ports: [{ name: 'console', port: 8082 }],
     })
   }
 }
