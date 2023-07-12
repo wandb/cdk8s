@@ -52,6 +52,7 @@ export class ConsoleChart extends WbChart {
       ApiResource.INGRESS_CLASSES,
       ApiResource.PRIORITY_LEVEL_CONFIGURATIONS,
       ApiResource.NAMESPACES,
+      ApiResource.EVENTS,
       ApiResource.custom({ apiGroup: '', resourceType: 'pods/log' }),
       ApiResource.custom({ apiGroup: 'metrics.k8s.io', resourceType: 'nodes' }),
       ApiResource.custom({
