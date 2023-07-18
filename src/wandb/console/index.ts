@@ -18,6 +18,7 @@ import { Construct } from 'constructs'
 export type ConsoleChartProps = ChartProps & {
   metadata?: ApiObjectMetadata
   image?: { repository?: string; tag?: string }
+  operator?: { namespace?: string }
   name?: string
   namespace?: string
 }
@@ -95,8 +96,11 @@ export class ConsoleChart extends WbChart {
             memory: { request: Size.mebibytes(10), limit: Size.mebibytes(30) },
           },
           envVariables: {
-            OPERATOR_NAME: EnvValue.fromValue(props.name ?? 'wandb'),
             OPERATOR_NAMESPACE: EnvValue.fromValue(
+              props.operator?.namespace ?? 'wandb',
+            ),
+            INSTANCE_NAME: EnvValue.fromValue(props.name ?? 'wandb'),
+            INSTANCE_NAMESPACE: EnvValue.fromValue(
               props.namespace ?? 'default',
             ),
           },
