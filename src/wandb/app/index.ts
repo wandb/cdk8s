@@ -19,7 +19,11 @@ import { MysqlCredentialsConfig } from '../../mysql'
 import { WbChart } from '../../global/chart'
 import { RedisCredentialsConfig } from '../../redis/config'
 import { canConnectToDatabase, mysqlConfigToEnv } from '../../mysql/helpers'
-import { canConnectToRedis, redisConfigToEnv } from '../../redis/helpers'
+import {
+  canConnectToRedis,
+  redisCertMount,
+  redisConfigToEnv,
+} from '../../redis/helpers'
 
 export type AppChartProps = ChartProps & {
   metadata?: ApiObjectMetadata
@@ -73,6 +77,7 @@ export class AppChart extends WbChart {
             allowPrivilegeEscalation: true,
             readOnlyRootFilesystem: false,
           },
+          volumeMounts: [...redisCertMount(this, 'redis-ca-cert')],
           envVariables: {
             ...redisConfigToEnv(this, 'deployment-redis', redis),
             ...mysqlConfigToEnv(this, 'deployment-mysql', mysql),

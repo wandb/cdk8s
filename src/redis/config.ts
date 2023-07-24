@@ -10,7 +10,19 @@ const imageSettings = z
 
 export const redisCredentialsConfig = z.object({
   host: z.string(),
-  port: z.string(),
+  port: z.number(),
+  user: z.string().optional(),
+  password: z
+    .object({
+      secret: z.string(),
+      key: z.string(),
+      checksum: z.string().optional(),
+    })
+    .or(z.string())
+    .optional(),
+
+  caCert: z.string().optional(),
+  params: z.record(z.string()).optional(),
 
   image: imageSettings,
 })

@@ -117,10 +117,15 @@
                   "type": "string"
                 }
               },
-              "required": [
-                "repository",
-                "tag"
-              ],
+              "additionalProperties": false
+            },
+            "operator": {
+              "type": "object",
+              "properties": {
+                "namespace": {
+                  "type": "string"
+                }
+              },
               "additionalProperties": false
             },
             "name": {
@@ -148,10 +153,6 @@
                   "type": "string"
                 }
               },
-              "required": [
-                "repository",
-                "tag"
-              ],
               "additionalProperties": false
             },
             "extraEnvs": {
@@ -366,7 +367,45 @@
                   "type": "string"
                 },
                 "port": {
+                  "type": "number"
+                },
+                "user": {
                   "type": "string"
+                },
+                "password": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "secret": {
+                          "type": "string"
+                        },
+                        "key": {
+                          "type": "string"
+                        },
+                        "checksum": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "secret",
+                        "key"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "caCert": {
+                  "type": "string"
+                },
+                "params": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
                 },
                 "image": {
                   "type": "object",

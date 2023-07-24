@@ -11,7 +11,7 @@ type RedisChartProps = ChartProps & {
 
 export class RedisChart extends WbChart {
   service: Service
-  constructor(scope: Construct, id: string, private props: RedisChartProps) {
+  constructor(scope: Construct, id: string, props: RedisChartProps) {
     super(scope, id, props)
 
     const { metadata } = props
@@ -48,8 +48,8 @@ export class RedisChart extends WbChart {
   getCredentials(): RedisCredentialsConfig {
     return {
       host: this.service.name,
-      port: '6379',
-      image: this.props.image,
+      port: 6379,
+      params: {},
     }
   }
 }
