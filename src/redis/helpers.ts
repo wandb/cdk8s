@@ -51,7 +51,10 @@ export const redisConfigToEnv = (
   id: string,
   config: RedisCredentialsConfig,
 ): Record<string, EnvValue> => {
-  const params = stringify(config.params)
+  let params = stringify(config.params)
+  if (params.length > 0) {
+    params = '?' + params
+  }
 
   return {
     REDIS_PARAMETERS: EnvValue.fromValue(params),
@@ -70,7 +73,7 @@ export const redisConfigToEnv = (
     REDIS_HOST: EnvValue.fromValue(config.host),
     REDIS_PORT: EnvValue.fromValue(config.port.toString()),
     REDIS: EnvValue.fromValue(
-      `redis://$(REDIS_USER):$(REDIS_PASSWORD)@$(REDIS_HOST):$(REDIS_PORT)?${params}`,
+      `redis://$(REDIS_USER):$(REDIS_PASSWORD)@$(REDIS_HOST):$(REDIS_PORT)$(REDIS_PARAMETERS)`,
     ),
   }
 }
