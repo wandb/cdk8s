@@ -9,6 +9,7 @@ import { config } from './src/config'
 import { logger } from './src/logger'
 import { RedisCredentialsConfig } from './src/redis/config'
 import { RedisChart } from './src/redis'
+import { RedisExternalChart } from './src/redis/ca-cert'
 
 const app = new App()
 
@@ -31,6 +32,11 @@ const getMysqlCredentials = (): MysqlCredentialsConfig => {
 
 const getRedisCredentials = (): RedisCredentialsConfig => {
   if (config.redis != null && 'host' in config.redis) {
+    new RedisExternalChart(app, 'redis', {
+      disableResourceNameHashes: true,
+      ...config.redis,
+      metadata,
+    })
     return config.redis
   }
 
