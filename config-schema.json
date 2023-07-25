@@ -403,9 +403,7 @@
                 },
                 "params": {
                   "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  }
+                  "additionalProperties": {}
                 },
                 "image": {
                   "type": "object",

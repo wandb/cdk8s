@@ -22,7 +22,7 @@ export const redisCredentialsConfig = z.object({
     .optional(),
 
   caCert: z.string().optional(),
-  params: z.record(z.string()).optional(),
+  params: z.record(z.any()).optional(),
 
   image: imageSettings,
 })
