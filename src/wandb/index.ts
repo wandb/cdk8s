@@ -8,7 +8,7 @@ import { GeneralConfig } from '../global/global'
 import { IngressChart } from './ingress'
 import { ConsoleChart, ConsoleChartProps } from './console'
 
-type WeightsAndBaisesChartConfig = ChartProps & {
+type WeightsAndBiasesChartConfig = ChartProps & {
   global: GeneralConfig
   app: AppChartProps
   console?: ConsoleChartProps
@@ -18,7 +18,7 @@ type WeightsAndBaisesChartConfig = ChartProps & {
   }
 }
 
-export class WeightsAndBaisesChart extends WbChart {
+export class WeightsAndBiasesChart extends WbChart {
   app: AppChart
   weave: WeaveChart
   console: ConsoleChart
@@ -26,7 +26,7 @@ export class WeightsAndBaisesChart extends WbChart {
   constructor(
     scope: Construct,
     id: string,
-    props: WeightsAndBaisesChartConfig,
+    props: WeightsAndBiasesChartConfig,
   ) {
     super(scope, id, { disableResourceNameHashes: true, ...props })
 
@@ -47,7 +47,7 @@ export class WeightsAndBaisesChart extends WbChart {
     new IngressChart(this, `ingress`, {
       ...props,
       ...ingress,
-      metadata: merge(global.metadata, ingress?.metadata ?? {}),
+      metadata: merge(global.metadata, ingress?.metadata),
       console: this.console.service,
       app: this.app.service,
     })

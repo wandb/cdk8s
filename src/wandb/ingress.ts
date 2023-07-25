@@ -10,7 +10,7 @@ import { WbChart } from '../global/chart'
 
 type IngressChartProps = ChartProps & {
   defaultBackend?: 'app' | 'console'
-  metadata: ApiObjectMetadata
+  metadata?: ApiObjectMetadata
   console: Service
   app: Service
 }

@@ -3,7 +3,7 @@
 import './src/schema'
 
 import { App } from 'cdk8s'
-import { WeightsAndBaisesChart } from './src/wandb'
+import { WeightsAndBiasesChart } from './src/wandb'
 import { MysqlCredentialsConfig, MysqlStatefulSetChart } from './src/mysql'
 import { config } from './src/config'
 import { logger } from './src/logger'
@@ -46,9 +46,9 @@ const getRedisCredentials = (): RedisCredentialsConfig => {
 
 const mysql = getMysqlCredentials()
 const redis = getRedisCredentials()
-const bucket = config.bucket ?? { connectionString: 'unknown://bucket' }
+const bucket = config.bucket ?? { connectionString: 'bucket://unknown' }
 
-new WeightsAndBaisesChart(app, 'wandb', {
+new WeightsAndBiasesChart(app, 'wandb', {
   disableResourceNameHashes: true,
   ...config,
   global: { ...config.global, metadata },
