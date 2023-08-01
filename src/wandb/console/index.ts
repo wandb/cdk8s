@@ -93,7 +93,7 @@ export class ConsoleChart extends WbChart {
           },
           resources: {
             cpu: { request: Cpu.millis(100), limit: Cpu.millis(500) },
-            memory: { request: Size.mebibytes(10), limit: Size.mebibytes(30) },
+            memory: { request: Size.mebibytes(100), limit: Size.mebibytes(200) },
           },
           envVariables: {
             OPERATOR_NAMESPACE: EnvValue.fromValue(
