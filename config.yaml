@@ -1,3 +1,11 @@
 # yaml-language-server: $schema=./config-schema.json
 bucket:
   connectionString: 's3://test'
+
+redis:
+  user: ''
+  password: 'testing'
+  port: 6379
+  host: 'localhost'
+  params:
+    tls: 'true'
