@@ -34,7 +34,7 @@ export const canConnectToRedis = (
       allowPrivilegeEscalation: true,
       readOnlyRootFilesystem: false,
     },
-    volumeMounts: [...redisCertMount(scope, 'redis-ca-cert')],
+    volumeMounts: [...redisCertMount(scope, `redis-ca-cert`)],
     envVariables: { ...redisConfigToEnv(scope, 'init-check', config) },
     command: [
       '/bin/sh',
@@ -82,6 +82,10 @@ export const redisConfigToEnv = (
   }
 }
 
+export const redisCertVolume = (scope: Construct, id: string): Volume[] => {
+  retur
+}
+
 export const redisCertMount = (scope: Construct, id: string): VolumeMount[] => {
   return redisCaCertConfigMap == null
     ? []
@@ -90,7 +94,7 @@ export const redisCertMount = (scope: Construct, id: string): VolumeMount[] => {
           path: REDIS_CERTIFICATE_PATH,
           volume: Volume.fromConfigMap(
             scope,
-            `${id}-redis-ca`,
+            `${scope.node.id}-${id}-redis-ca`,
             ConfigMap.fromConfigMapName(scope, id, redisCaCertConfigMap),
           ),
         },

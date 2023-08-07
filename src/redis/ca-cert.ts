@@ -26,6 +26,8 @@ export class RedisExternalChart extends WbChart {
       })
 
       redisCaCertConfigMap = cfg.name
+
+      console
     }
   }
 }

@@ -9,3 +9,4 @@ redis:
   host: 'localhost'
   params:
     tls: 'true'
+  caCert: 'testomg'
