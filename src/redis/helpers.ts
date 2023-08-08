@@ -24,9 +24,12 @@ export const canConnectToRedis = (
 ): ContainerProps => {
   const repository = config.image?.repository ?? REDIS_DEFAULT_REPOSITORY
   const tag = config.image?.tag ?? REDIS_DEFAULT_TAG
-  const command = ['redis-cli', '-u', '$(REDIS_URI)']
+  const command = ['redis-cli', '-p', '$(REDIS_PORT)', '-h', '$(REDIS_HOST)']
   if (config.caCert != null)
     command.push('--tls', '--cacert', REDIS_CERTIFICATE_PATH)
+
+  if (config.password != null)
+    command.push('-a', '$(REDIS_PASSWORD)')
 
   return {
     name: 'check-redis',
