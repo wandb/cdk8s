@@ -114,6 +114,7 @@ export const redisCertMount = (
   return volume == null
     ? [
       {
+        readOnly: true,
         path: REDIS_CERTIFICATE_DIR,
         subPath: REDIS_CERTIFICATE_FILE_NAME,
         volume: Volume.fromConfigMap(
@@ -128,6 +129,7 @@ export const redisCertMount = (
       },
     ]
     : [{
+      readOnly: true,
       path: REDIS_CERTIFICATE_PATH,
       subPath: REDIS_CERTIFICATE_FILE_NAME,
       volume
