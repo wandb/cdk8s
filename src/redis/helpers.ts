@@ -19,6 +19,7 @@ export const REDIS_CERTIFICATE_PATH = `/etc/ssl/certs/${REDIS_CERTIFICATE_FILE_N
 export const canConnectToRedis = (
   scope: Construct,
   config: RedisCredentialsConfig,
+  volume: Volume | null,
 ): ContainerProps => {
   const repository = config.image?.repository ?? REDIS_DEFAULT_REPOSITORY
   const tag = config.image?.tag ?? REDIS_DEFAULT_TAG
@@ -34,8 +35,10 @@ export const canConnectToRedis = (
       allowPrivilegeEscalation: true,
       readOnlyRootFilesystem: false,
     },
-    volumeMounts: [...redisCertMount(scope, `redis-ca-cert`)],
-    envVariables: { ...redisConfigToEnv(scope, 'init-check', config) },
+    volumeMounts: [...redisCertMount(scope, `redis-ca-cert`, volume)],
+    envVariables: {
+      ...redisConfigToEnv(scope, `init-check`, config),
+    },
     command: [
       '/bin/sh',
       '-c',
@@ -82,21 +85,43 @@ export const redisConfigToEnv = (
   }
 }
 
-// export const redisCertVolume = (scope: Construct, id: string): Volume[] => {
-//   return
-// }
-
-export const redisCertMount = (scope: Construct, id: string): VolumeMount[] => {
+export const redisCertVolume = (
+  scope: Construct,
+  id: string,
+): Volume | null => {
   return redisCaCertConfigMap == null
-    ? []
-    : [
+    ? null
+    : Volume.fromConfigMap(
+        scope,
+        id,
+        ConfigMap.fromConfigMapName(
+          scope,
+          `${scope.node.id}-${id}`,
+          redisCaCertConfigMap,
+        ),
+      )
+}
+
+export const redisCertMount = (
+  scope: Construct,
+  id: string,
+  volume: Volume | null,
+): VolumeMount[] => {
+  if (redisCaCertConfigMap == null) return []
+  return volume == null
+    ? [
         {
           path: REDIS_CERTIFICATE_PATH,
           volume: Volume.fromConfigMap(
             scope,
-            `${scope.node.id}-${id}-redis-ca`,
-            ConfigMap.fromConfigMapName(scope, id, redisCaCertConfigMap),
+            id,
+            ConfigMap.fromConfigMapName(
+              scope,
+              `${scope.node.id}-${id}`,
+              redisCaCertConfigMap,
+            ),
           ),
         },
       ]
+    : [{ path: REDIS_CERTIFICATE_PATH, volume }]
 }

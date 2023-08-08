@@ -19,7 +19,12 @@ import { MysqlCredentialsConfig } from '../../mysql'
 import { WbChart } from '../../global/chart'
 import { RedisCredentialsConfig } from '../../redis/config'
 import { canConnectToDatabase, mysqlConfigToEnv } from '../../mysql/helpers'
-import { canConnectToRedis, redisConfigToEnv } from '../../redis/helpers'
+import {
+  canConnectToRedis,
+  redisCertMount,
+  redisCertVolume,
+  redisConfigToEnv,
+} from '../../redis/helpers'
 
 export type AppChartProps = ChartProps & {
   metadata?: ApiObjectMetadata
@@ -47,6 +52,8 @@ export class AppChart extends WbChart {
 
     const repository = image?.repository ?? 'wandb/local'
     const tag = image?.tag ?? 'latest'
+
+    const redisCaCertVolume = redisCertVolume(this, 'redis-ca-cert')
     this.deployment = new Deployment(this, `app`, {
       replicas: 1,
       metadata,
@@ -60,9 +67,8 @@ export class AppChart extends WbChart {
       },
       initContainers: [
         canConnectToDatabase(this, `${repository}:${tag}`, mysql),
-        canConnectToRedis(this, redis),
+        canConnectToRedis(this, redis, redisCaCertVolume),
       ],
-      // volumes: [Volume.fromConfigMap()],
       containers: [
         {
           image: `${repository}:${tag}`,
@@ -74,12 +80,20 @@ export class AppChart extends WbChart {
             allowPrivilegeEscalation: true,
             readOnlyRootFilesystem: false,
           },
-          // volumeMounts: [...redisCertMount(this, 'deployment-redis-ca-cert')],
+          volumeMounts: [
+            ...redisCertMount(
+              this,
+              'deployment-redis-ca-cert',
+              redisCaCertVolume,
+            ),
+          ],
           envVariables: {
             ...redisConfigToEnv(this, 'deployment-redis', redis),
             ...mysqlConfigToEnv(this, 'deployment-mysql', mysql),
             ...bucketConfigToEnv(this, 'deployment-s3', bucket),
+
             ...(sso != null ? ssoConfigToEnv(sso) : {}),
+
             LICENSE:
               props.license == null || typeof props.license === 'string'
                 ? EnvValue.fromValue(props.license ?? '')
