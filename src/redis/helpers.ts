@@ -82,9 +82,9 @@ export const redisConfigToEnv = (
   }
 }
 
-export const redisCertVolume = (scope: Construct, id: string): Volume[] => {
-  retur
-}
+// export const redisCertVolume = (scope: Construct, id: string): Volume[] => {
+//   return
+// }
 
 export const redisCertMount = (scope: Construct, id: string): VolumeMount[] => {
   return redisCaCertConfigMap == null

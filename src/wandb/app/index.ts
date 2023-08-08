@@ -62,7 +62,7 @@ export class AppChart extends WbChart {
         canConnectToDatabase(this, `${repository}:${tag}`, mysql),
         canConnectToRedis(this, redis),
       ],
-      volumes: [Volume.fromConfigMap()],
+      // volumes: [Volume.fromConfigMap()],
       containers: [
         {
           image: `${repository}:${tag}`,
