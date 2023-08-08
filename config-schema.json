@@ -155,6 +155,13 @@
               },
               "additionalProperties": false
             },
+            "host": {
+              "type": "string"
+            },
+            "sessionLength": {
+              "type": "number",
+              "default": 720
+            },
             "extraEnvs": {
               "type": "object",
               "additionalProperties": {

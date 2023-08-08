@@ -44,6 +44,8 @@ export const schema = z
             tag: z.string().optional(),
           })
           .optional(),
+        host: z.string().optional(),
+        sessionLength: z.number().default(720),
         extraEnvs: z.record(z.string()).optional(),
       })
       .optional(),
