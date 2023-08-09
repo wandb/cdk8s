@@ -97,6 +97,13 @@
             },
             "storageClassName": {
               "type": "string"
+            },
+            "extraEnvs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
             }
           },
           "additionalProperties": false
