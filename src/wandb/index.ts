@@ -32,7 +32,7 @@ export class WeightsAndBiasesChart extends WbChart {
 
     const { global, app, ingress, console: consoleProps } = props
 
-    const extraEnvs = {
+    const extraEnvs: Record<string, string> = {
       ...(global?.extraEnvs ?? {}),
       ...(app?.extraEnvs ?? {}),
     }
