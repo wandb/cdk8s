@@ -99,11 +99,11 @@
               "type": "string"
             },
             "extraEnvs": {
-              "type": "array",
-              "items": {
+              "type": "object",
+              "additionalProperties": {
                 "type": "string"
               },
-              "default": []
+              "default": {}
             }
           },
           "additionalProperties": false

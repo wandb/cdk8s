@@ -18,7 +18,7 @@ export const metadataConfig = z.object({
 export const generalConfig = z.object({
   metadata: metadataConfig.optional(),
   storageClassName: z.string().optional(),
-  extraEnvs: z.array(z.string()).default([]).optional(),
+  extraEnvs: z.record(z.string()).default({}).optional(),
 })
 
 export type GeneralConfig = z.infer<typeof generalConfig>
