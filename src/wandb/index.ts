@@ -30,7 +30,7 @@ export class WeightsAndBiasesChart extends WbChart {
   ) {
     super(scope, id, { disableResourceNameHashes: true, ...props })
 
-    const { global, app, ingress, console: consoleProps } = props
+    const { global, app, ingress, console } = props
 
     this.app = new AppChart(this, `app`, {
       ...props,
@@ -42,7 +42,7 @@ export class WeightsAndBiasesChart extends WbChart {
     this.console = new ConsoleChart(this, `console`, {
       ...props,
       ...console,
-      metadata: merge(global.metadata, consoleProps?.metadata),
+      metadata: merge(global.metadata, console?.metadata),
     })
 
     new IngressChart(this, `ingress`, {
