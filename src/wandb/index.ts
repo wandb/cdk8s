@@ -43,6 +43,7 @@ export class WeightsAndBiasesChart extends WbChart {
       ...props,
       ...console,
       metadata: merge(global.metadata, console?.metadata),
+      extraEnvs: merge(global.extraEnvs, console?.extraEnvs),
     })
 
     new IngressChart(this, `ingress`, {

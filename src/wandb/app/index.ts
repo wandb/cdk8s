@@ -25,6 +25,7 @@ import {
   redisCertVolume,
   redisConfigToEnv,
 } from '../../redis/helpers'
+import { envsToValue } from '../../global/extra-envs'
 
 export type AppChartProps = ChartProps & {
   metadata?: ApiObjectMetadata
@@ -121,7 +122,7 @@ export class AppChart extends WbChart {
             LOGGING_ENABLED: EnvValue.fromValue('true'),
             HOST: EnvValue.fromValue(host ?? ''),
             SESSION_LENGTH: EnvValue.fromValue(sessionLength?.toString() ?? ''),
-            ...extraEnvs,
+            ...envsToValue(extraEnvs),
           },
         },
       ],

@@ -284,6 +284,9 @@
                 "user": {
                   "type": "string"
                 },
+                "name": {
+                  "type": "string"
+                },
                 "database": {
                   "type": "string"
                 },

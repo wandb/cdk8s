@@ -4,6 +4,7 @@ export const mysqlCredentialConfig = z.object({
   host: z.string(),
   port: z.number(),
   user: z.string(),
+  name: z.string().optional(),
   database: z.string(),
   password: z
     .object({

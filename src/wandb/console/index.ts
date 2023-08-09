@@ -14,6 +14,7 @@ import {
 import { WbChart } from '../../global/chart'
 import { ApiObjectMetadata, ChartProps, Size } from 'cdk8s'
 import { Construct } from 'constructs'
+import { envsToValue } from '../../global/extra-envs'
 
 export type ConsoleChartProps = ChartProps & {
   metadata?: ApiObjectMetadata
@@ -21,13 +22,14 @@ export type ConsoleChartProps = ChartProps & {
   operator?: { namespace?: string }
   name?: string
   namespace?: string
+  extraEnvs?: Record<string, string>
 }
 
 export class ConsoleChart extends WbChart {
   service: Service
   constructor(scope: Construct, id: string, props: ConsoleChartProps) {
     super(scope, id, props)
-    const { metadata } = props
+    const { metadata, extraEnvs } = props
 
     // TODO: Reduce scope
     const role = new ClusterRole(this, `role`, { metadata })
@@ -93,7 +95,10 @@ export class ConsoleChart extends WbChart {
           },
           resources: {
             cpu: { request: Cpu.millis(100), limit: Cpu.millis(500) },
-            memory: { request: Size.mebibytes(100), limit: Size.mebibytes(200) },
+            memory: {
+              request: Size.mebibytes(100),
+              limit: Size.mebibytes(200),
+            },
           },
           envVariables: {
             OPERATOR_NAMESPACE: EnvValue.fromValue(
@@ -103,6 +108,7 @@ export class ConsoleChart extends WbChart {
             INSTANCE_NAMESPACE: EnvValue.fromValue(
               props.namespace ?? 'default',
             ),
+            ...envsToValue(extraEnvs),
           },
         },
       ],
