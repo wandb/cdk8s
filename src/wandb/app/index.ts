@@ -120,9 +120,7 @@ export class AppChart extends WbChart {
             BUCKET_QUEUE: EnvValue.fromValue('internal://'),
             LOGGING_ENABLED: EnvValue.fromValue('true'),
             HOST: EnvValue.fromValue(host ?? ''),
-            SESSION_LENGTH: EnvValue.fromValue(
-              sessionLength?.toString() || '720',
-            ),
+            SESSION_LENGTH: EnvValue.fromValue(sessionLength?.toString() ?? ''),
             ...extraEnvs,
           },
         },
