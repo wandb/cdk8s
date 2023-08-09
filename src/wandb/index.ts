@@ -32,17 +32,11 @@ export class WeightsAndBiasesChart extends WbChart {
 
     const { global, app, ingress, console: consoleProps } = props
 
-    const extraEnvs: Record<string, string> = {
-      ...(global?.extraEnvs ?? {}),
-      ...(app?.extraEnvs ?? {}),
-    }
-
     this.app = new AppChart(this, `app`, {
       ...props,
       ...app,
-      ...global,
       metadata: merge(global.metadata, app.metadata),
-      extraEnvs: extraEnvs,
+      extraEnvs: merge(global.extraEnvs, app?.extraEnvs),
     })
     this.weave = new WeaveChart(this, `weave`, props)
     this.console = new ConsoleChart(this, `console`, {
