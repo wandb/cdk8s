@@ -37,6 +37,24 @@
           "type": "string",
           "default": "default"
         },
+        "customResource": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            },
+            "apiVersion": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "operator": {
+          "$ref": "#/definitions/wandb-config-cdk/properties/customResource"
+        },
         "global": {
           "type": "object",
           "properties": {
@@ -134,12 +152,6 @@
                 }
               },
               "additionalProperties": false
-            },
-            "name": {
-              "type": "string"
-            },
-            "namespace": {
-              "type": "string"
             }
           },
           "additionalProperties": false
