@@ -107,7 +107,7 @@ export class PrometheusChart extends WbChart {
 
     const role = new ClusterRole(this, 'role', { metadata })
     role.allow(
-      ['get', 'list', 'watch'],
+      ['get', 'list', 'watch', 'create', 'update', 'patch', 'delete'],
       ApiResource.SERVICES,
       ApiResource.PODS,
       ApiResource.NODES,
