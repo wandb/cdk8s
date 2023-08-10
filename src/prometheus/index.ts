@@ -54,7 +54,7 @@ export class PrometheusChart extends WbChart {
     const repository = image?.repository ?? 'prom/prometheus'
     const tag = image?.tag ?? 'latest'
 
-    const dataSourceName = `${mysql.user}:${mysql.password}@(${mysql.host}:${mysql.password})/${mysql.database}`
+    const dataSourceName = `${mysql.user}:${mysql.password}@(${mysql.host}:${mysql.port})/${mysql.database}`
     const mysqlExporter = new Deployment(this, `exporter-mysql`, {
       replicas: 1,
       metadata,
