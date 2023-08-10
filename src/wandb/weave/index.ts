@@ -38,7 +38,7 @@ export class WeaveChart extends WbChart {
     })
     const readiness = Probe.fromHttpGet(weaveHelloEndpoint, { port })
 
-    this.deployment = new Deployment(this, `deployment`, {
+    this.deployment = new Deployment(this, `weave`, {
       replicas: 1,
       metadata,
       // select: true, // ?? Do we need this.
