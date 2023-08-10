@@ -2,6 +2,8 @@
 # bucket:
 #   connectionString: 's3://test'
 
+host: 'localhost'
+
 console:
   namespace: 'default'
 # redis:

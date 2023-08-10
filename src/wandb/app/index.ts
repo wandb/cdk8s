@@ -48,15 +48,15 @@ export class AppChart extends WbChart {
   constructor(scope: Construct, id: string, props: AppChartProps) {
     super(scope, id, props)
     const {
+      metadata,
+      image,
       mysql,
+      bucket,
       redis,
       sso,
-      bucket,
-      image,
-      metadata,
-      extraEnvs,
       host,
       sessionLength,
+      extraEnvs,
       weave,
     } = props
 
@@ -127,6 +127,7 @@ export class AppChart extends WbChart {
             WEAVE_SERVICE: EnvValue.fromValue(
               `${weave?.metadata?.name}:${weave?.port}`,
             ),
+            OPERATOR_ENABLED: EnvValue.fromValue('true'),
             ...envsToValue(extraEnvs),
           },
         },
