@@ -34,11 +34,6 @@ export class IngressChart extends WbChart {
           backend: consoleBackend,
           pathType: HttpIngressPathType.PREFIX,
         },
-        {
-          path: '/__weave',
-          pathType: HttpIngressPathType.PREFIX,
-          backend: appBackend,
-        },
       ],
     })
   }

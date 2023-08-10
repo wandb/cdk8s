@@ -12,6 +12,7 @@ import { WeaveChartProps } from './weave'
 type WeightsAndBiasesChartConfig = ChartProps & {
   global: GeneralConfig
   app: AppChartProps
+  host?: string
   console?: Omit<ConsoleChartProps, 'app'>
   weave?: WeaveChartProps
   ingress?: {
@@ -36,7 +37,6 @@ export class WeightsAndBiasesChart extends WbChart {
 
     this.weave = new WeaveChart(this, `weave`, {
       ...props,
-      host: app?.host,
       image: app?.image,
       metadata: merge(global.metadata, weave?.metadata),
       extraEnvs: merge(global.extraEnvs, weave?.extraEnvs),

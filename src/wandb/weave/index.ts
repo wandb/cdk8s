@@ -29,7 +29,7 @@ export class WeaveChart extends WbChart {
     const port = 9994
     const repository = image?.repository ?? 'wandb/local'
     const tag = image?.tag ?? 'latest'
-    const weaveHelloEndpoint = '__weave/hello'
+    const weaveHelloEndpoint = '/__weave/hello'
     const liveness = Probe.fromHttpGet(weaveHelloEndpoint, { port })
     const startup = Probe.fromHttpGet(weaveHelloEndpoint, {
       port,

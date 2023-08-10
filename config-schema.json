@@ -144,6 +144,9 @@
           },
           "additionalProperties": false
         },
+        "host": {
+          "type": "string"
+        },
         "app": {
           "type": "object",
           "properties": {
@@ -161,9 +164,6 @@
                 }
               },
               "additionalProperties": false
-            },
-            "host": {
-              "type": "string"
             },
             "sessionLength": {
               "type": "number",
