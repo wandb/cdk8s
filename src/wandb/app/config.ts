@@ -66,9 +66,7 @@ export type SsoConfig = z.infer<typeof ssoConfig>
 export const ssoConfigToEnv = (sso: SsoConfig): Record<string, EnvValue> => {
   return {
     OIDC_CLIENT_ID: EnvValue.fromValue(sso.oidc?.clientId ?? ''),
-    GORILLA_OIDC_CLIENT_ID: EnvValue.fromValue(sso.oidc?.clientId ?? ''),
     OIDC_ISSUER: EnvValue.fromValue(sso.oidc?.issuer ?? ''),
-    GORILLA_OIDC_ISSUER: EnvValue.fromValue(sso.oidc?.issuer ?? ''),
     OIDC_AUTH_METHOD: EnvValue.fromValue(sso.oidc?.method ?? ''),
     ...(sso.ldap != null ? {} : {}),
   }
