@@ -4,6 +4,11 @@
 
 host: 'localhost'
 
+ingress:
+  metadata:
+    annotations:
+      kubernetes.io/ingress.class: 'gce'
+
 console:
   namespace: 'default'
 # redis:
