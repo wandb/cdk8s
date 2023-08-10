@@ -23,6 +23,7 @@ export type ConsoleChartProps = ChartProps & {
   name?: string
   namespace?: string
   extraEnvs?: Record<string, string>
+  app: Service
 }
 
 export class ConsoleChart extends WbChart {
@@ -101,6 +102,9 @@ export class ConsoleChart extends WbChart {
             },
           },
           envVariables: {
+            AUTH_SERVICE: EnvValue.fromValue(
+              `${props.app.name}:${props.app.port}`,
+            ),
             OPERATOR_NAMESPACE: EnvValue.fromValue(
               props.operator?.namespace ?? 'wandb',
             ),

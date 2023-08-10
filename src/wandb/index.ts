@@ -42,6 +42,7 @@ export class WeightsAndBiasesChart extends WbChart {
     this.console = new ConsoleChart(this, `console`, {
       ...props,
       ...console,
+      app: this.app.service,
       metadata: merge(global.metadata, console?.metadata),
       extraEnvs: merge(global.extraEnvs, console?.extraEnvs),
     })
