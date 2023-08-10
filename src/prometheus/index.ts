@@ -114,13 +114,8 @@ export class PrometheusChart extends WbChart {
       ApiResource.ENDPOINTS,
     )
 
-    const sa = new ServiceAccount(this, `service-account`, {
-      metadata,
-    })
-    const binding = new ClusterRoleBinding(this, `binding`, {
-      metadata,
-      role,
-    })
+    const binding = new ClusterRoleBinding(this, `binding`, { metadata, role })
+    const sa = new ServiceAccount(this, `service-account`, { metadata })
     binding.addSubjects(sa)
 
     this.deployment = new Deployment(this, `prometheus`, {

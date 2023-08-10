@@ -66,9 +66,11 @@ export class ConsoleChart extends WbChart {
         resourceType: 'weightsandbiases',
       }),
     )
-
-    const sa = new ServiceAccount(this, `service-account`, { metadata })
     const binding = new ClusterRoleBinding(this, `binding`, { metadata, role })
+    const sa = new ServiceAccount(this, `service-account`, {
+      metadata,
+      automountToken: true,
+    })
     binding.addSubjects(sa)
 
     const { image } = props
