@@ -7,6 +7,7 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
+    "docker:build": "docker build -t wandb/cdk8s:latest .",
     "import": "cdk8s import",
     "gen": "ts-node main.ts",
     "gen:schema": "ts-node src/schema.ts",

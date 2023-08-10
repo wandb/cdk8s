@@ -48,7 +48,7 @@ jobs:
 
       - name: Build and Push
         run: |
-          make docker-build
+          pnpm run docker:build
 
           docker push wandb/cdk8s:latest
 
