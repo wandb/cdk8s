@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.1.1](https://github.com/wandb/cdk8s/compare/v1.1.0...v1.1.1) (2023-08-10)
+
+
+### Bug Fixes
+
+* release pipeline ([e1d91ae](https://github.com/wandb/cdk8s/commit/e1d91ae7be65f3c90a1e239334d9c91081c8de18))
+
 ## [1.1.0](https://github.com/wandb/cdk8s/compare/v1.0.0...v1.1.0) (2023-08-10)
 
 
