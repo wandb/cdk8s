@@ -41,7 +41,6 @@ export class WeaveChart extends WbChart {
     this.deployment = new Deployment(this, `weave`, {
       replicas: 1,
       metadata,
-      // select: true, // ?? Do we need this.
       containers: [
         {
           image: `${repository}:${tag}`,
@@ -87,5 +86,12 @@ export class WeaveChart extends WbChart {
       selector: this.deployment,
       ports: [{ port: port, targetPort: port }],
     })
+
+    // new HorizontalPodAutoscaler(this, `hpa`, {
+    //   metadata,
+    //   target: this.deployment,
+    //   maxReplicas: 10,
+    //   metrics: [Metric.resourceCpu(MetricTarget.averageUtilization(70))],
+    // })
   }
 }

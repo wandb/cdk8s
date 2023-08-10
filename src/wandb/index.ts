@@ -8,10 +8,12 @@ import { GeneralConfig } from '../global/global'
 import { IngressChart } from './ingress'
 import { ConsoleChart, ConsoleChartProps } from './console'
 import { WeaveChartProps } from './weave'
+import { PrometheusChart, PrometheusChartProps } from '../prometheus'
 
 type WeightsAndBiasesChartConfig = ChartProps & {
   global: GeneralConfig
   app: AppChartProps
+  prometheus: PrometheusChartProps
   host?: string
   console?: Omit<ConsoleChartProps, 'app'>
   weave?: WeaveChartProps
@@ -54,6 +56,12 @@ export class WeightsAndBiasesChart extends WbChart {
       app: this.app.service,
       metadata: merge(global.metadata, console?.metadata),
       extraEnvs: merge(global.extraEnvs, console?.extraEnvs),
+    })
+
+    new PrometheusChart(this, `prometheus`, {
+      ...props,
+      ...props.prometheus,
+      extraEnvs: merge(global.extraEnvs),
     })
 
     new IngressChart(this, `ingress`, {

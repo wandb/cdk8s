@@ -109,6 +109,9 @@ export class AppChart extends WbChart {
 
             ...ssoConfigToEnv(sso ?? {}),
 
+            PARQUET_ENABLE: EnvValue.fromValue('true'),
+            PARQUET_HOST: EnvValue.fromValue('parquet:9000'),
+
             LICENSE:
               props.license == null || typeof props.license === 'string'
                 ? EnvValue.fromValue(props.license ?? '')
@@ -147,5 +150,12 @@ export class AppChart extends WbChart {
       selector: this.deployment,
       ports: [{ name: 'prometheus', port: 8181 }],
     })
+
+    // new HorizontalPodAutoscaler(this, `hpa`, {
+    //   metadata,
+    //   target: this.deployment,
+    //   maxReplicas: 5,
+    //   metrics: [Metric.resourceCpu(MetricTarget.averageUtilization(70))],
+    // })
   }
 }

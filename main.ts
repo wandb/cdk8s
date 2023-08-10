@@ -58,7 +58,8 @@ new WeightsAndBiasesChart(app, 'wandb', {
   disableResourceNameHashes: true,
   ...config,
   global: { ...config.global, metadata },
-  app: { ...config, ...config.app, mysql, bucket, redis },
+  prometheus: { mysql },
+  app: { ...config.app, mysql, bucket, redis },
 })
 
 app.synth()
