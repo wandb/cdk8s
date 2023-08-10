@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=./config-schema.json
+
+global:
+  # Metadata applied to all resources. Any metadata properties are all the same.
+  metadata:
+    ownerReferences:
+      - apiVersion: apps/v1
+        controller: false
+        kind: Deployment
+        name: my-deployment
+        uid: random-id
+    annotations:
+      'kubernetes.io/name': 'wandb-local'
+      # ...
+    labels:
+      key1: value1
+      key2: value2
+      # ...
+
+bucket:
+  connectionString: 's3://test'
+  region: us-east-2
+  kmsKey: arn:aws:kms:us-east-2:123456789012:kms-key
+
+# App deploys the wandb/local image
+app:
+  image:
+    repository: wandb/local
+    tag: 0.30.1
+
+  extraEnvs:
+    GORILLA_AUDIT_LOGS: 'true'
+
+  # Metadata applied to app resources
+  metadata:
+    annotations:
+      'kubernetes.io/name': 'wandb-local'
+      # ...
+    labels:
+      key1: value1
+      key2: value2
+      # ...
+
+mysql:
+  host: 0.0.0.0
+  port: 3306
+  user: root
+  password: password
+  database: wandb
+
+redis:
+  host: :password@0.0.0.0
+  port: 6379
+
+  # Used if you don't pass in a connection
+  image:
+    repository: redis
+    tag: 6.2.5
+
+console:
+  image:
+    repository: wandb/console
+    tag: 1.0.0
+
+  # name of the deployed instance (auto populated by operator)
+  name: wandb
+  # namespace the console is deployed into (auto populated by operator)
+  namespace: default
+
+ingress:
+  metadata:
+    annotations:
+      'kubernetes.io/ingresClass': 'gke'
+      # ...
+    labels:
+      key1: value1
+      key2: value2
+      # ...
+
+  # Weather the default would redirect to the app or console this is used if we
+  # want to direct the user to the console if the main app is down
+  defaultBackend: console
+
+sso:
+  oidc:
+    clientId: '1234567890'
+    issuer: 'https://accounts.google.com'
+    method: implicit
+  ldap: {}

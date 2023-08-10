@@ -11,7 +11,7 @@ import { ConsoleChart, ConsoleChartProps } from './console'
 type WeightsAndBiasesChartConfig = ChartProps & {
   global: GeneralConfig
   app: AppChartProps
-  console?: ConsoleChartProps
+  console?: Omit<ConsoleChartProps, 'app'>
   ingress?: {
     defaultBackend?: 'app' | 'console'
     metadata?: ApiObjectMetadata
