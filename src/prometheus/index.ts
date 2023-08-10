@@ -50,10 +50,11 @@ export class PrometheusChart extends WbChart {
   constructor(scope: Construct, id: string, props: PrometheusChartProps) {
     super(scope, id, props)
 
-    const { metadata, image, extraEnvs } = props
+    const { metadata, image, extraEnvs, mysql } = props
     const repository = image?.repository ?? 'prom/prometheus'
     const tag = image?.tag ?? 'latest'
 
+    const dataSourceName = `${mysql.user}:${mysql.password}@(${mysql.host}:${mysql.password})/${mysql.database}`
     const mysqlExporter = new Deployment(this, `exporter-mysql`, {
       replicas: 1,
       metadata,
@@ -70,9 +71,7 @@ export class PrometheusChart extends WbChart {
           },
           envVariables: {
             ...mysqlConfigToEnv(this, 'mysql', props.mysql),
-            DATA_SOURCE_NAME: EnvValue.fromValue(
-              '$(MYSQL_USER):$(MYSQL_PASSWORD)@($(MYSQL_HOST):$(MYSQL_PORT))/$(MYSQL_DATABASE)',
-            ),
+            DATA_SOURCE_NAME: EnvValue.fromValue(dataSourceName),
             ...envsToValue(extraEnvs),
           },
           ports: [{ name: 'mysql-metrics', number: 9104 }],
