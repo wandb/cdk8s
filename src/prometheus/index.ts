@@ -71,7 +71,7 @@ export class PrometheusChart extends WbChart {
           envVariables: {
             ...mysqlConfigToEnv(this, 'mysql', props.mysql),
             DATA_SOURCE_NAME: EnvValue.fromValue(
-              '$(MYSQL_USER):$(MYSQL_PASSWORD)@$(MYSQL_HOST):$(MYSQL_PORT)/',
+              '$(MYSQL_USER):$(MYSQL_PASSWORD)@$(MYSQL_HOST):$(MYSQL_PORT)/$(MYSQL_DATABASE)',
             ),
             ...envsToValue(extraEnvs),
           },
