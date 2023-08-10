@@ -67,9 +67,7 @@ export class ConsoleChart extends WbChart {
       }),
     )
 
-    const sa = new ServiceAccount(this, `service-account`, {
-      metadata: { ...metadata, namespace: customResource?.namespace },
-    })
+    const sa = new ServiceAccount(this, `service-account`, { metadata })
     const binding = new ClusterRoleBinding(this, `binding`, { metadata, role })
     binding.addSubjects(sa)
 

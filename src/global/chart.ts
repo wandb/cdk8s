@@ -7,7 +7,7 @@ export class WbChart extends Chart {
     super(scope, id, {
       disableResourceNameHashes: true,
       labels: { app: 'wandb', ...props?.labels },
-      namespace: config.namespace,
+      namespace: config.customResource?.namespace ?? 'default',
       ...props,
     })
   }
