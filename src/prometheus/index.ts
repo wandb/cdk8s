@@ -74,7 +74,7 @@ export class PrometheusChart extends WbChart {
             readOnlyRootFilesystem: false,
           },
           envVariables: {
-            MYSQL_ROOT_PASSWORD:
+            MYSQLD_EXPORTER_PASSWORD:
               typeof mysql.password === 'string'
                 ? EnvValue.fromValue(mysql.password)
                 : EnvValue.fromSecretValue({
