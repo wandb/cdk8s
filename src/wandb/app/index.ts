@@ -38,6 +38,7 @@ export type AppChartProps = ChartProps & {
   sessionLength?: number
   license?: LicenseConfig
   extraEnvs?: Record<string, string>
+  weave?: Service
 }
 
 export class AppChart extends WbChart {
@@ -56,6 +57,7 @@ export class AppChart extends WbChart {
       extraEnvs,
       host,
       sessionLength,
+      weave,
     } = props
 
     const port = 8080
@@ -122,6 +124,9 @@ export class AppChart extends WbChart {
             LOGGING_ENABLED: EnvValue.fromValue('true'),
             HOST: EnvValue.fromValue(host ?? ''),
             SESSION_LENGTH: EnvValue.fromValue(sessionLength?.toString() ?? ''),
+            WEAVE_SERVICE: EnvValue.fromValue(
+              `${weave?.metadata?.name}:${weave?.port}`,
+            ),
             ...envsToValue(extraEnvs),
           },
         },

@@ -7,11 +7,13 @@ import { WbChart } from '../global/chart'
 import { GeneralConfig } from '../global/global'
 import { IngressChart } from './ingress'
 import { ConsoleChart, ConsoleChartProps } from './console'
+import { WeaveChartProps } from './weave'
 
 type WeightsAndBiasesChartConfig = ChartProps & {
   global: GeneralConfig
   app: AppChartProps
   console?: Omit<ConsoleChartProps, 'app'>
+  weave?: WeaveChartProps
   ingress?: {
     defaultBackend?: 'app' | 'console'
     metadata?: ApiObjectMetadata
@@ -30,15 +32,22 @@ export class WeightsAndBiasesChart extends WbChart {
   ) {
     super(scope, id, { disableResourceNameHashes: true, ...props })
 
-    const { global, app, ingress, console } = props
+    const { global, app, ingress, console, weave } = props
 
+    this.weave = new WeaveChart(this, `weave`, {
+      ...props,
+      host: app?.host,
+      image: app?.image,
+      metadata: merge(global.metadata, weave?.metadata),
+      extraEnvs: merge(global.extraEnvs, weave?.extraEnvs),
+    })
     this.app = new AppChart(this, `app`, {
       ...props,
       ...app,
       metadata: merge(global.metadata, app.metadata),
       extraEnvs: merge(global.extraEnvs, app?.extraEnvs),
+      weave: this.weave.service,
     })
-    this.weave = new WeaveChart(this, `weave`, props)
     this.console = new ConsoleChart(this, `console`, {
       ...props,
       ...console,
