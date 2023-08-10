@@ -8,9 +8,6 @@ ingress:
   metadata:
     annotations:
       kubernetes.io/ingress.class: 'gce'
-
-console:
-  namespace: 'default'
 # redis:
 #   user: ''
 #   password: 'testing'

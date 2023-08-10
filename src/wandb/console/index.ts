@@ -4,6 +4,7 @@ import {
   ClusterRoleBinding,
   Cpu,
   Deployment,
+  EnvFieldPaths,
   EnvValue,
   ImagePullPolicy,
   Probe,
@@ -15,13 +16,13 @@ import { WbChart } from '../../global/chart'
 import { ApiObjectMetadata, ChartProps, Size } from 'cdk8s'
 import { Construct } from 'constructs'
 import { envsToValue } from '../../global/extra-envs'
+import { CustomResource, Operator } from '../../global/operator'
 
 export type ConsoleChartProps = ChartProps & {
   metadata?: ApiObjectMetadata
   image?: { repository?: string; tag?: string }
-  operator?: { namespace?: string }
-  name?: string
-  namespace?: string
+  operator?: Operator
+  customResource?: CustomResource
   extraEnvs?: Record<string, string>
   app: Service
 }
@@ -30,7 +31,7 @@ export class ConsoleChart extends WbChart {
   service: Service
   constructor(scope: Construct, id: string, props: ConsoleChartProps) {
     super(scope, id, props)
-    const { metadata, extraEnvs } = props
+    const { metadata, extraEnvs, customResource, operator } = props
 
     // TODO: Reduce scope
     const role = new ClusterRole(this, `role`, { metadata })
@@ -106,11 +107,13 @@ export class ConsoleChart extends WbChart {
               `${props.app.name}:${props.app.port}`,
             ),
             OPERATOR_NAMESPACE: EnvValue.fromValue(
-              props.operator?.namespace ?? 'wandb',
+              operator?.namespace ?? 'wandb',
             ),
-            INSTANCE_NAME: EnvValue.fromValue(props.name ?? 'wandb'),
-            INSTANCE_NAMESPACE: EnvValue.fromValue(
-              props.namespace ?? 'default',
+            INSTANCE_NAME: EnvValue.fromValue(
+              customResource?.name ?? 'default',
+            ),
+            INSTANCE_NAMESPACE: EnvValue.fromFieldRef(
+              EnvFieldPaths.POD_NAMESPACE,
             ),
             ...envsToValue(extraEnvs),
           },

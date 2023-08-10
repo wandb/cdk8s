@@ -6,6 +6,7 @@ import { bucketConfig, ssoConfig } from './wandb/app/config'
 import { redisConfig } from './redis/config'
 import { generalConfig, metadataConfig } from './global/global'
 import { licenseConfig } from './wandb/app/config'
+import { customResource } from './global/operator'
 
 export const schema = z
   .object({
@@ -13,6 +14,9 @@ export const schema = z
 
     license: licenseConfig.optional(),
     namespace: z.string().default('default').optional(),
+
+    customResource: customResource.optional(),
+    operator: customResource.optional(),
 
     global: generalConfig.optional(),
 
@@ -30,8 +34,6 @@ export const schema = z
             namespace: z.string().optional(),
           })
           .optional(),
-        name: z.string().optional(),
-        namespace: z.string().optional(),
       })
       .optional(),
 
