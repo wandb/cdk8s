@@ -26,19 +26,21 @@ const prometheusConfig = ({
   mysqlExportorLabel: string
 }) => `
 global:
-    scrape_interval:     15s
-    evaluation_interval: 15s
+  scrape_interval: 15s
+  evaluation_interval: 15s
 scrape_configs:
-    - job_name: 'prometheus'
-        static_configs:
-            - targets: ['localhost:9090']
-    - job_name: 'mysql_exporter'
-        kubernetes_sd_configs:
-            - role: pod
-        relabel_configs:
-            - source_labels: [__meta_kubernetes_pod_label_app]
-            action: keep
-            regex: ${mysqlExportorLabel}
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - 'localhost:9090'
+  - job_name: mysql_exporter
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels:
+          - __meta_kubernetes_pod_label_app
+        action: keep
+        regex: ${mysqlExportorLabel}
 `
 
 export class PrometheusChart extends WbChart {
