@@ -6,6 +6,7 @@ import {
   Deployment,
   EnvValue,
   Protocol,
+  Secret,
   Service,
   Volume,
 } from 'cdk8s-plus-26'
@@ -54,7 +55,6 @@ export class PrometheusChart extends WbChart {
     const repository = image?.repository ?? 'prom/prometheus'
     const tag = image?.tag ?? 'latest'
 
-    const dataSourceName = `${mysql.user}:${mysql.password}@(${mysql.host}:${mysql.port})/${mysql.database}`
     const mysqlExporter = new Deployment(this, `exporter-mysql`, {
       replicas: 1,
       metadata,
@@ -70,11 +70,25 @@ export class PrometheusChart extends WbChart {
             readOnlyRootFilesystem: false,
           },
           envVariables: {
+            MYSQL_ROOT_PASSWORD:
+              typeof mysql.password === 'string'
+                ? EnvValue.fromValue(mysql.password)
+                : EnvValue.fromSecretValue({
+                    secret: Secret.fromSecretName(
+                      scope,
+                      `${scope.node.id}-${id}-mysql-password-root`,
+                      mysql.password.secret,
+                    ),
+                    key: mysql.password.key,
+                  }),
             ...mysqlConfigToEnv(this, 'mysql', props.mysql),
-            DATA_SOURCE_NAME: EnvValue.fromValue(dataSourceName),
             ...envsToValue(extraEnvs),
           },
           ports: [{ name: 'mysql-metrics', number: 9104 }],
+          args: [
+            `--mysqld.address=${mysql.host}:${mysql.port}`,
+            `--mysqld.username=${mysql.user}`,
+          ],
         },
       ],
     })
