@@ -63,6 +63,11 @@ export class PrometheusChart extends WbChart {
       containers: [
         {
           image: 'prom/mysqld-exporter:latest',
+          securityContext: {
+            ensureNonRoot: false,
+            allowPrivilegeEscalation: true,
+            readOnlyRootFilesystem: false,
+          },
           envVariables: {
             ...mysqlConfigToEnv(this, 'mysql', props.mysql),
             DATA_SOURCE: EnvValue.fromValue(
