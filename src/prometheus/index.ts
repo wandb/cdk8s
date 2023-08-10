@@ -2,12 +2,16 @@ import { Construct } from 'constructs'
 import { WbChart } from '../global/chart'
 import { ApiObjectMetadata, ChartProps } from 'cdk8s'
 import {
+  ApiResource,
+  ClusterRole,
+  ClusterRoleBinding,
   ConfigMap,
   Deployment,
   EnvValue,
   Protocol,
   Secret,
   Service,
+  ServiceAccount,
   Volume,
 } from 'cdk8s-plus-26'
 import { envsToValue } from '../global/extra-envs'
@@ -101,9 +105,29 @@ export class PrometheusChart extends WbChart {
       },
     })
 
+    const role = new ClusterRole(this, 'role', { metadata })
+    role.allow(
+      ['get', 'list', 'watch'],
+      ApiResource.SERVICES,
+      ApiResource.PODS,
+      ApiResource.NODES,
+      ApiResource.ENDPOINTS,
+    )
+
+    const sa = new ServiceAccount(this, `service-account`, {
+      metadata,
+    })
+    const binding = new ClusterRoleBinding(this, `binding`, {
+      metadata,
+      role,
+    })
+    binding.addSubjects(sa)
+
     this.deployment = new Deployment(this, `prometheus`, {
       replicas: 1,
       metadata,
+      serviceAccount: sa,
+      automountServiceAccountToken: true,
       containers: [
         {
           image: `${repository}:${tag}`,
