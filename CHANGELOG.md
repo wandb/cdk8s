@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0](https://github.com/wandb/cdk8s/compare/v1.0.0...v1.1.0) (2023-08-10)
+
+
+### Features
+
+* init ([57bc368](https://github.com/wandb/cdk8s/commit/57bc368ee65c61d2689ca848d2b03b024e271df5))
+
 ## 1.0.0 (2023-08-10)
 
 
