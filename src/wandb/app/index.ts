@@ -107,7 +107,7 @@ export class AppChart extends WbChart {
             ...mysqlConfigToEnv(this, 'deployment-mysql', mysql),
             ...bucketConfigToEnv(this, 'deployment-s3', bucket),
 
-            ...(sso != null ? ssoConfigToEnv(sso) : {}),
+            ...ssoConfigToEnv(sso ?? {}),
 
             LICENSE:
               props.license == null || typeof props.license === 'string'
