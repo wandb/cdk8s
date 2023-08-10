@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    # Skip running release workflow on forks
+    if: github.repository_owner == 'wandb'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Versioning
+        id: release
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          semantic_version: 19.0.2
+          extra_plugins: |
+            @semantic-release/changelog@6.0.1
+            @semantic-release/git@10.0.1
+            conventional-changelog-conventionalcommits@4.6.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_SECRET }}
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: stable
+
+      - name: Build and Push
+        run: |
+          make docker-build
+
+          docker push wandb/cdk8s:latest
+
+          docker tag wandb/cdk8s:latest wandb/cdk8s:${{ steps.release.outputs.new_release_version }}
+          docker push wandb/cdk8s:${{ steps.release.outputs.new_release_version }}
+
+          docker tag wandb/cdk8s:latest wandb/cdk8s:${{ steps.release.outputs.new_release_major_version }}.${{ steps.release.outputs.new_release_minor_version }}
+          docker push wandb/cdk8s:${{ steps.release.outputs.new_release_major_version }}.${{ steps.release.outputs.new_release_minor_version }}
+
+          docker tag wandb/cdk8s:latest wandb/cdk8s:${{ steps.release.outputs.new_release_major_version }}
+          docker push wandb/cdk8s:${{ steps.release.outputs.new_release_major_version }}
