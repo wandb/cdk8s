@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.1.5](https://github.com/wandb/cdk8s/compare/v1.1.4...v1.1.5) (2023-08-11)
+
+
+### Bug Fixes
+
+* Add HPA option for app ([e673b22](https://github.com/wandb/cdk8s/commit/e673b227770bbdb2ca6d011e1381168adb09373c))
+
 ### [1.1.4](https://github.com/wandb/cdk8s/compare/v1.1.3...v1.1.4) (2023-08-11)
 
 
