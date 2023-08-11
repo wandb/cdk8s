@@ -19,9 +19,21 @@ const getConfigFromArgs = () => {
   return null
 }
 
+const getConfigFromEnv = () => {
+  const env = process.env.CONFIG
+  if (env != null) {
+    logger.info('Loading config from env')
+    return JSON.parse(env)
+  }
+  return null
+}
+
 const getConfig = () => {
   const cmdArg: any = getConfigFromArgs()
   if (cmdArg != null) return cmdArg
+
+  const osConfig: any = getConfigFromEnv()
+  if (osConfig != null) return osConfig
 
   logger.info(`Loading config from ${configPath}`)
   const file = readFileSync(configPath, 'utf8')
