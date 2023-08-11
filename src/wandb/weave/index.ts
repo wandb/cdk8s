@@ -70,6 +70,7 @@ export class WeaveChart extends WbChart {
             WANDB_BASE_URL: EnvValue.fromValue(host ?? ''),
             WEAVE_LOG_FORMAT: EnvValue.fromValue('json'),
             WEAVE_AUTH_GRAPHQL_URL: EnvValue.fromValue(host + '/graphql'),
+            WEAVE_SERVER_ENABLE_LOGGING: EnvValue.fromValue('true'),
             // WEAVE_ENABLE_DATADOG: EnvValue.fromValue('weave'),
             // DD_SERVICE: EnvValue.fromValue('weave'),
             // DD_ENV: EnvValue.fromValue('weave'),
