@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0](https://github.com/wandb/cdk8s/compare/v1.1.6...v1.2.0) (2023-08-11)
+
+
+### Features
+
+* Option to read config from env ([7f7386f](https://github.com/wandb/cdk8s/commit/7f7386f76daa406183ecdb19c7d558d568191788))
+
 ### [1.1.6](https://github.com/wandb/cdk8s/compare/v1.1.5...v1.1.6) (2023-08-11)
 
 
