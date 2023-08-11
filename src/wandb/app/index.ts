@@ -2,6 +2,9 @@ import { ApiObjectMetadata, ChartProps } from 'cdk8s'
 import {
   Deployment,
   EnvValue,
+  HorizontalPodAutoscaler,
+  Metric,
+  MetricTarget,
   Probe,
   Secret,
   Service,
@@ -70,7 +73,6 @@ export class AppChart extends WbChart {
 
     const redisCaCertVolume = redisCertVolume(this, 'redis-ca-cert')
     this.deployment = new Deployment(this, `app`, {
-      replicas: 1,
       metadata,
       podMetadata: {
         annotations: {
@@ -151,11 +153,12 @@ export class AppChart extends WbChart {
       ports: [{ name: 'prometheus', port: 8181 }],
     })
 
-    // new HorizontalPodAutoscaler(this, `hpa`, {
-    //   metadata,
-    //   target: this.deployment,
-    //   maxReplicas: 5,
-    //   metrics: [Metric.resourceCpu(MetricTarget.averageUtilization(70))],
-    // })
+    new HorizontalPodAutoscaler(this, `hpa`, {
+      metadata,
+      target: this.deployment,
+      minReplicas: 1,
+      maxReplicas: 5,
+      metrics: [Metric.resourceCpu(MetricTarget.averageUtilization(70))],
+    })
   }
 }
