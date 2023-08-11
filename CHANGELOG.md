@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.1.4](https://github.com/wandb/cdk8s/compare/v1.1.3...v1.1.4) (2023-08-11)
+
+
+### Bug Fixes
+
+* Install gits in docker file ([dbd2369](https://github.com/wandb/cdk8s/commit/dbd23694c71052602793035eba2234c1e5062079))
+
 ### [1.1.3](https://github.com/wandb/cdk8s/compare/v1.1.2...v1.1.3) (2023-08-11)
 
 
