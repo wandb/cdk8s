@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.1.3](https://github.com/wandb/cdk8s/compare/v1.1.2...v1.1.3) (2023-08-11)
+
+
+### Bug Fixes
+
+* Add kubectl to docker image ([e63ef4f](https://github.com/wandb/cdk8s/commit/e63ef4fdcd8de2f9bf7a240d87f9cad3c6a48f64))
+
 ### [1.1.2](https://github.com/wandb/cdk8s/compare/v1.1.1...v1.1.2) (2023-08-11)
 
 
