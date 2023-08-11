@@ -62,11 +62,6 @@ console:
     repository: wandb/console
     tag: 1.0.0
 
-  # name of the deployed instance (auto populated by operator)
-  name: wandb
-  # namespace the console is deployed into (auto populated by operator)
-  namespace: default
-
 ingress:
   metadata:
     annotations:
