@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.2.1](https://github.com/wandb/cdk8s/compare/v1.2.0...v1.2.1) (2023-08-12)
+
+
+### Bug Fixes
+
+* Env check ([9afe08e](https://github.com/wandb/cdk8s/commit/9afe08ecb1355d4337a104355baebe65ef601c5e))
+
 ## [1.2.0](https://github.com/wandb/cdk8s/compare/v1.1.6...v1.2.0) (2023-08-11)
 
 
