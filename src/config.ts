@@ -20,9 +20,9 @@ const getConfigFromArgs = () => {
 }
 
 const getConfigFromEnv = () => {
-  const env = process.env.CONFIG
-  if (env != null) {
-    logger.info('Loading config from env')
+  const env = process.env.CONFIG ?? ''
+  if (env !== '') {
+    logger.info('Loading config from env (CONFIG)')
     return JSON.parse(env)
   }
   return null
