@@ -1,1 +1,2 @@
-rm -rf ./dist && pnpm gen && kubectl apply -f ./dist --prune -l app=wandb
+# Requires kubectl client 1.27 or higher
+rm -rf ./dist && pnpm gen && KUBECTL_APPLYSET=true kubectl apply -f ./dist #--applyset=applyset --prune -n default

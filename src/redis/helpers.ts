@@ -17,6 +17,10 @@ export const REDIS_CERTIFICATE_FILE_NAME = 'redis_ca.pem'
 export const REDIS_CERTIFICATE_DIR = `/etc/ssl/certs`
 export const REDIS_CERTIFICATE_PATH = `${REDIS_CERTIFICATE_DIR}/${REDIS_CERTIFICATE_FILE_NAME}`
 
+export const isExternalRedis = (config: RedisCredentialsConfig): boolean => {
+  return config.host !== 'redis-service'
+}
+
 export const canConnectToRedis = (
   scope: Construct,
   config: RedisCredentialsConfig,
@@ -28,8 +32,7 @@ export const canConnectToRedis = (
   if (config.caCert != null)
     command.push('--tls', '--cacert', REDIS_CERTIFICATE_PATH)
 
-  if (config.password != null)
-    command.push('-a', '$(REDIS_PASSWORD)')
+  if (config.password != null) command.push('-a', '$(REDIS_PASSWORD)')
 
   return {
     name: 'check-redis',
@@ -77,13 +80,13 @@ export const redisConfigToEnv = (
       typeof config.password === 'string' || config.password == null
         ? EnvValue.fromValue(config.password ?? '')
         : EnvValue.fromSecretValue({
-          secret: Secret.fromSecretName(
-            scope,
-            `${scope.node.id}-${id}-redis-password`,
-            config.password.secret,
-          ),
-          key: config.password.key,
-        }),
+            secret: Secret.fromSecretName(
+              scope,
+              `${scope.node.id}-${id}-redis-password`,
+              config.password.secret,
+            ),
+            key: config.password.key,
+          }),
     REDIS_HOST: EnvValue.fromValue(config.host),
     REDIS_PORT: EnvValue.fromValue(config.port.toString()),
     REDIS: EnvValue.fromValue(connectionStringWithParams),
@@ -98,14 +101,14 @@ export const redisCertVolume = (
   return redisCaCertConfigMap == null
     ? null
     : Volume.fromConfigMap(
-      scope,
-      id,
-      ConfigMap.fromConfigMapName(
         scope,
-        `${scope.node.id}-${id}`,
-        redisCaCertConfigMap,
-      ),
-    )
+        id,
+        ConfigMap.fromConfigMapName(
+          scope,
+          `${scope.node.id}-${id}`,
+          redisCaCertConfigMap,
+        ),
+      )
 }
 
 export const redisCertMount = (
@@ -116,25 +119,27 @@ export const redisCertMount = (
   if (redisCaCertConfigMap == null) return []
   return volume == null
     ? [
-      {
-        readOnly: true,
-        path: REDIS_CERTIFICATE_DIR,
-        subPath: REDIS_CERTIFICATE_FILE_NAME,
-        volume: Volume.fromConfigMap(
-          scope,
-          id,
-          ConfigMap.fromConfigMapName(
+        {
+          readOnly: true,
+          path: REDIS_CERTIFICATE_DIR,
+          subPath: REDIS_CERTIFICATE_FILE_NAME,
+          volume: Volume.fromConfigMap(
             scope,
-            `${scope.node.id}-${id}`,
-            redisCaCertConfigMap,
+            id,
+            ConfigMap.fromConfigMapName(
+              scope,
+              `${scope.node.id}-${id}`,
+              redisCaCertConfigMap,
+            ),
           ),
-        ),
-      },
-    ]
-    : [{
-      readOnly: true,
-      path: REDIS_CERTIFICATE_PATH,
-      subPath: REDIS_CERTIFICATE_FILE_NAME,
-      volume
-    }]
+        },
+      ]
+    : [
+        {
+          readOnly: true,
+          path: REDIS_CERTIFICATE_PATH,
+          subPath: REDIS_CERTIFICATE_FILE_NAME,
+          volume,
+        },
+      ]
 }
